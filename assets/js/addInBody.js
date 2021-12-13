@@ -1,18 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,300;0,400;0,600;1,300&display=swap"
-      rel="stylesheet"
-    />
-    <link rel="stylesheet" href="./assets/css/chat.css" />
-    <link rel="stylesheet" href="./assets/css/style.css" />
-    <title>Chatbox</title>
-  </head>
-  <body>
-    <div class="container">
+document.getElementsByTagName("BODY")[0].innerHTML += `  <div class="container" >
       <div class="chatbox">
         <div class="chatbox__support chatbox--active">
           <div id="chatbox__chatlists">
@@ -91,12 +77,9 @@
         </form>
         <div id="log"></div>
       </div>
+      
     </div>
-    <script src="./assets/js/demoData.js"></script>
-    <script src="./assets/js/script.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-    <script src="./assets/js/Chatbox.js"></script>
-    <script src="./assets/js/libs/agora-rtm-sdk-1.4.3.js"></script>
-    <script src="./assets/js/agora.js"></script>
-  </body>
-</html>
+    
+   
+    `
+    document.getElementsByTagName("BODY")[0].innerHTML += `<script src="./assets/js/demoData.js"></script>`

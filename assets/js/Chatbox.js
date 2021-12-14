@@ -40,7 +40,6 @@ class InteractiveChatbox {
     }
   }
   gotoChat() {
-    console.log('clickgotochat'+this.isBack)
     const { chatSection, chatList } = this.args;
     this.isBack = !this.isBack;
     if (!this.isBack) {
@@ -49,7 +48,6 @@ class InteractiveChatbox {
     }
   }
   backTochatList() {
-console.log('clickgotochatlist'+this.isBack)
     const { chatSection, chatList } = this.args;
     this.isBack = !this.isBack;
     if (this.isBack) {

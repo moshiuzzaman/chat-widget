@@ -37,6 +37,7 @@
 }
 .chatbox__button img {
     transition: transform .3s;
+    width: 40px;
 }
 .chatbox__button:hover img {
     transform: rotate(22deg);
@@ -79,4 +80,8 @@
     bottom: 0;
 }
 
-
+.chat__callicon img {
+    width: 25px;
+    margin: 0px 10px;
+    cursor: pointer;
+}

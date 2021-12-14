@@ -23,7 +23,7 @@ let chatListData = [
       },
       {
         messageType: 3,
-        text: "<sprite=1><sprite=1><sprite=1>",
+        text: "<sprite=1><sprite=1><sprite=1> dfgry segre gbredg retg rgrdg regh",
         timeStamp: null,
         username: "Zarif",
       },
@@ -54,6 +54,32 @@ let friendList = [
     friendName: "Raj3",
     id: "chatlistData4"
   },
+  {
+    friendName: "shozon raj",
+    id: "chatlistData5"
+  }
+  
   
 ];
-console.log(chatListData[0].messages);
+let data=JSON.parse(localStorage.getItem('CemsChatData'))
+if(data===null){
+  // friendList=[]
+  // chatListData=[]
+}else{
+  if(data.friendList===undefined){
+    friendList=[]
+  }else{
+    friendList=data.friendList
+  }
+  if (data.chatListData===undefined){
+    chatListData=[]
+  }else{
+    chatListData=data.chatListData
+  }
+
+}
+
+  window.addEventListener("beforeunload", function (e) {
+    let CemsChatData={friendList:friendList,chatListData:chatListData}
+    localStorage.setItem('CemsChatData',JSON.stringify(CemsChatData))
+  });

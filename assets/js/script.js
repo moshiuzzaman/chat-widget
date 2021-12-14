@@ -87,9 +87,13 @@ let sendMessage=(id)=>{
       }]
       chatListData.push(exactMessagesData)
       console.log(chatListData)
+      document.getElementById('chatbox__messages').innerHTML=''
       createMessageOutput(typeMessage)
     }else{
       let withoutExactMessagesData=chatListData.filter((d) => d.id !== id);
+      if(exactMessagesData.messages.length===0){
+        document.getElementById('chatbox__messages').innerHTML=''
+      }
       exactMessagesData.messages.push({
           messageType: 2,
           text: typeMessage,

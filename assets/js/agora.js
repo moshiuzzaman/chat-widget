@@ -8,16 +8,15 @@ let options = {
 // Your app ID
 const appID = "9726a69c2bd448108598e9e5a3d7e0d4"
 // Your token
-async function getUser() {
+async function getUser(option) {
     try {
-      const response = await axios.get('https://agoratokenbs23.herokuapp.com/rtm-token?username=shozonraj');
+      const response = await axios.get(`https://agoratokenbs23.herokuapp.com/rtm-token?username=${options.uid}`);
       return await response.data.token
     } catch (error) {
       console.error(error);
     }
   }
 
-options.token = "0069726a69c2bd448108598e9e5a3d7e0d4IACRpjP5xZY9NO8npKE2VJlRs1jDBZA2nF0erAgjAnR2OiD9+qEAAAAAEACBTXra46a0YQEA6ANzY7Nh"
 
 // Initialize client
 const client = AgoraRTM.createInstance(appID)
@@ -62,7 +61,7 @@ window.onload = function () {
     // login
      async function login() {
         options.uid='shozonraj'
-        let token =await getUser()
+        let token =await getUser(options)
         options.token=token
         await client.login(options)
     }

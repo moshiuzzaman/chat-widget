@@ -82,4 +82,3 @@ document.getElementsByTagName("BODY")[0].innerHTML += `  <div class="container" 
     
    
     `
-    document.getElementsByTagName("BODY")[0].innerHTML += `<script src="./assets/js/demoData.js"></script>`

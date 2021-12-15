@@ -23,10 +23,10 @@ class InteractiveChatbox {
 
   showOrHideChatBox(chatbox, chatToggleButton) {
     if (this.showChatbox) {
-      chatbox.classList.add("chatbox--active");
+      chatbox.classList.add("cems__chatbox--active");
       this.toggleIcon(true, chatToggleButton);
     } else if (!this.showChatbox) {
-      chatbox.classList.remove("chatbox--active");
+      chatbox.classList.remove("cems__chatbox--active");
       this.toggleIcon(false, chatToggleButton);
     }
   }
@@ -43,23 +43,25 @@ class InteractiveChatbox {
     const { chatSection, chatList } = this.args;
     this.isBack = !this.isBack;
     if (!this.isBack) {
-      chatSection.classList.remove("hide__section");
-      chatList.classList.add("hide__section");
+      chatSection.classList.remove("cems__hide__section");
+      chatList.classList.add("cems__hide__section");
+      var chatEl = document.getElementById("cems__chatbox__messages");
+      chatEl.scrollTop = chatEl.scrollHeight
     }
   }
   backTochatList() {
     const { chatSection, chatList } = this.args;
     this.isBack = !this.isBack;
     if (this.isBack) {
-      chatList.classList.remove("hide__section");
-      chatSection.classList.add("hide__section");
+      chatList.classList.remove("cems__hide__section");
+      chatSection.classList.add("cems__hide__section");
     }
   }
 }
-const chatToggleButton = document.querySelector(".chatbox__button");
-const chatContent = document.querySelector(".chatbox__support");
-const chatList = document.getElementById("chatbox__chatlists");
-const chatSection = document.getElementById("chatbox__chatting");
+const chatToggleButton = document.querySelector(".cems__chatbox__button");
+const chatContent = document.querySelector(".cems__chatbox__support");
+const chatList = document.getElementById("cems__chatbox__chatlists");
+const chatSection = document.getElementById("cems__chatbox__chatting");
 
 const icons = {
   isClicked: '<img src="./images/icons/chatbox-icon2.svg" />',

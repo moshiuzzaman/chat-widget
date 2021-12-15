@@ -34,7 +34,6 @@ let chatListData = [
     id: "chatlistData2",
     messages: [],
   },
-  
 ];
 let friendList = [
   {

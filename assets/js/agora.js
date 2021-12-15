@@ -26,16 +26,17 @@ class agoraFuntionality{
             { text: peerMessage },
             peerId,
         ).then(sendResult => {
+            
             if (sendResult.hasPeerReceived) {
-
                 document.getElementById("log").appendChild(document.createElement('div')).append("Message has been received by: " + peerId + " Message: " + peerMessage)
-                return 'recive'
+                
             } else {
 
                 document.getElementById("log").appendChild(document.createElement('div')).append("Message sent to: " + peerId + " Message: " + peerMessage)
-                return 'sent'
+                
 
             }
+           
         })
     }
 }
@@ -62,11 +63,13 @@ let options = {
 
 let createRecivedMessageOutput=(message,peerId)=>{
     let createMessageOutput=document.createElement('div')
-    createMessageOutput.className="messages__item messages__item--visitor"
+    createMessageOutput.className="cems__messages__item cems__messages__item--visitor"
     createMessageOutput.innerHTML=`${message}`
     let className=peerId.replace(/ /g,"_")
-    let isClass=document.getElementsByClassName(`messageFor${className}`)[0]
+    let isClass=document.getElementsByClassName(`cems__messageFor${className}`)[0]
+    console.log('objectff11')
     if(isClass!==undefined){
+        console.log('object11')
         isClass.appendChild(createMessageOutput)
     }
 }
@@ -83,12 +86,12 @@ client.on('MessageFromPeer', function (message, peerId) {
           username: peerId,
       }]
       chatListData.unshift(exactMessagesData)
-      document.getElementById('chatbox__messages').innerHTML=''
+      document.getElementById('cems__chatbox__messages').innerHTML=''
       createRecivedMessageOutput(message.text,peerId)
     }else{
       let withoutExactMessagesData=chatListData.filter((d) => d.friendName !== peerId);
       if(exactMessagesData.messages.length===0){
-        document.getElementById('chatbox__messages').innerHTML=''
+        document.getElementById('cems__chatbox__messages').innerHTML=''
       }
       exactMessagesData.messages.push({
           messageType: 3,
@@ -100,5 +103,7 @@ client.on('MessageFromPeer', function (message, peerId) {
       createRecivedMessageOutput(message.text,peerId)
     }
     gotoChatList()
+    var chatEl = document.getElementById("cems__chatbox__messages");
+      chatEl.scrollTop = chatEl.scrollHeight
     document.getElementById("log").appendChild(document.createElement('div')).append("Message from: " + peerId.replace(/ /g,"_") + " Message: " + message.text)
 })

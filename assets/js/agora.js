@@ -10,7 +10,7 @@ class agoraFuntionality {
     document
     .getElementById("cems__log")
     .appendChild(document.createElement("div"))
-    .append("loged In");
+    .append(`loged In as ${this.userName}`);
   }
   async logout() {
     await client.logout();
@@ -151,7 +151,8 @@ client.on("RemoteInvitationReceived", (remoteInvitation) => {
   }
   
   remoteInvitation = remoteInvitation;
-  peerEvents();
+  console.log('object')
+  // peerEvents();
 });
 
 let peerEvents=()=>{

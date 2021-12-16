@@ -7,6 +7,10 @@ class agoraFuntionality {
   async login() {
     this.token = await this.createAgoraRtmToken(this.userName);
     await client.login({ uid: this.userName, token: this.token });
+    document
+    .getElementById("cems__log")
+    .appendChild(document.createElement("div"))
+    .append("loged In");
   }
   async logout() {
     await client.logout();
@@ -25,13 +29,13 @@ class agoraFuntionality {
     await client.sendMessageToPeer({ text: peerMessage }, peerId).then((sendResult) => {
       if (sendResult.hasPeerReceived) {
         document
-          .getElementById("log")
+          .getElementById("cems__log")
           .appendChild(document.createElement("div"))
           .append("Message has been received by: " + peerId + " Message: " + peerMessage);
         return "recive";
       } else {
         document
-          .getElementById("log")
+          .getElementById("cems__log")
           .appendChild(document.createElement("div"))
           .append("Message sent to: " + peerId + " Message: " + peerMessage);
         return "sent";
@@ -96,7 +100,7 @@ client.on("MessageFromPeer", function (message, peerId) {
   }
   gotoChatList();
   document
-    .getElementById("log")
+    .getElementById("cems__log")
     .appendChild(document.createElement("div"))
     .append("Message from: " + peerId.replace(/ /g, "_") + " Message: " + message.text);
 });

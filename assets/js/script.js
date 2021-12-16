@@ -4,7 +4,6 @@ let chatlistHeaderText = document.getElementById("cems__chatlist__header__text")
 let chatboxMessagesDiv = document.getElementById("cems__chatbox__messages");
 
 let chatsOrUsersToggle = (data) => {
-  console.log('object')
   let element = `
     <div class="cems__chat__list" id='${data.id}' onclick={showMesseges(this.id)}>
     <div class="cems__friend__icon">
@@ -20,7 +19,6 @@ let chatsOrUsersToggle = (data) => {
 let gotoChatList = () => {
   chatListsDiv.innerHTML = "";
   chatlistHeaderText.innerText = "Chats";
-  console.log(chatListData)
   if (chatListData.length < 1) {
     chatListsDiv.innerHTML = `<p class="cems__no_found">No Chats found</p>`;
   } else {
@@ -33,7 +31,6 @@ gotoChatList();
 let gotoUsers = () => {
   chatListsDiv.innerHTML = "";
   chatlistHeaderText.innerText = "Users";
-  console.log(friendList)
   if (friendList.length < 1) {
     chatListsDiv.innerHTML = `<p class="cems__no_found">No Friend found</p>`;
   } else {
@@ -136,7 +133,7 @@ let chatboxChating = (data) => {
   <img src="./images/icons/videocall.svg" alt="" />
   </div>
 </div>
-<div id="chatbox__messages" class="messageFor${data.friendName.replace(/ /g, "_")}">
+<div id="cems__chatbox__messages" class="messageFor${data.friendName.replace(/ /g, "_")}">
   ${
     !data.messages.length
       ? `<p class="cems__no_found">No message found</p>`

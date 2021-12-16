@@ -2,14 +2,14 @@
 
 /* CHATBOX
 =============== */
-.chatbox {
+.cems__chatbox {
     position: absolute;
     bottom: 30px;
     right: 30px;
 }
 
 /* CONTENT IS CLOSE */
-.chatbox__support {
+.cems__chatbox__support {
     display: flex;
     flex-direction: column;
     background: #eee;
@@ -21,7 +21,7 @@
 }
 
 /* CONTENT ISOPEN */
-.chatbox--active {
+.cems__chatbox--active {
     transform: translateY(-40px);
     z-index: 123456;
     opacity: 1;
@@ -29,29 +29,29 @@
 }
 
 /* BUTTON */
-.chatbox__button {
+.cems__chatbox__button {
     text-align: right;
     position: fixed;
     right: 26px;
     bottom: 25px;
 }
-.chatbox__button img {
+.cems__chatbox__button img {
     transition: transform .3s;
     width: 40px;
 }
-.chatbox__button:hover img {
+.cems__chatbox__button:hover img {
     transform: rotate(22deg);
 }
 
 /* HEADER */
-.chatbox__header {
+.cems__chatbox__header {
     position: sticky;
     top: 0;
     background: orange;
 }
 
 /* MESSAGES */
-#chatbox__messages {
+#cems__chatbox__messages {
     margin-top: auto;
     display: flex;
     flex-direction: column;
@@ -60,27 +60,27 @@
     min-height: 74%;
 }
 
-.messages__item {
+.cems__messages__item {
     background: orange;
     max-width: 60.6%;
     width: fit-content;
 }
 
-.messages__item--operator {
+.cems__messages__item--operator {
     margin-left: auto;
 }
 
-.messages__item--visitor {
+.cems__messages__item--visitor {
     margin-right: auto;
 }
 
 /* FOOTER */
-.chatbox__footer {
+.cems__chatbox__footer {
     position: sticky;
     bottom: 0;
 }
 
-.chat__callicon img {
+.cems__chat__callicon img {
     width: 25px;
     margin: 0px 10px;
     cursor: pointer;

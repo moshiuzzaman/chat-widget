@@ -56,7 +56,7 @@ let options = {
 
 let createRecivedMessageOutput = (message, peerId) => {
   let createMessageOutput = document.createElement("div");
-  createMessageOutput.className = "messages__item messages__item--visitor";
+  createMessageOutput.className = "cems__messages__item cems__messages__item--visitor";
   createMessageOutput.innerHTML = `${message}`;
   let className = peerId.replace(/ /g, "_");
   let isClass = document.getElementsByClassName(`messageFor${className}`)[0];
@@ -78,12 +78,12 @@ client.on("MessageFromPeer", function (message, peerId) {
       },
     ];
     chatListData.unshift(exactMessagesData);
-    document.getElementById("chatbox__messages").innerHTML = "";
+    document.getElementById("cems__chatbox__messages").innerHTML = "";
     createRecivedMessageOutput(message.text, peerId);
   } else {
     let withoutExactMessagesData = chatListData.filter((d) => d.friendName !== peerId);
     if (exactMessagesData.messages.length === 0) {
-      document.getElementById("chatbox__messages").innerHTML = "";
+      document.getElementById("cems__chatbox__messages").innerHTML = "";
     }
     exactMessagesData.messages.push({
       messageType: 3,

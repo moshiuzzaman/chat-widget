@@ -1,3 +1,7 @@
+let userName='shozonraj'
+// Your app ID
+const appID = "9726a69c2bd448108598e9e5a3d7e0d4"
+let calleeId='s'
 let chatListData = [
   {
     friendName: "Zarif",
@@ -34,6 +38,7 @@ let chatListData = [
     id: "chatlistData2",
     messages: [],
   },
+  
 ];
 let friendList = [
   {
@@ -60,7 +65,9 @@ let friendList = [
   
   
 ];
-let data=JSON.parse(localStorage.getItem('CemsChatData'))
+
+
+let data=JSON.parse(localStorage.getItem(`CemsChatDataFor${userName.replace(/ /g, "_")}`))
 if(data===null){
   // friendList=[]
   // chatListData=[]
@@ -80,5 +87,5 @@ if(data===null){
 
   window.addEventListener("beforeunload", function (e) {
     let CemsChatData={friendList:friendList,chatListData:chatListData}
-    localStorage.setItem('CemsChatData',JSON.stringify(CemsChatData))
+    localStorage.setItem(`CemsChatDataFor${userName.replace(/ /g, "_")}`,JSON.stringify(CemsChatData))
   });

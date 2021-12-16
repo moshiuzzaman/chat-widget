@@ -45,6 +45,7 @@ function showMesseges(id) {
     exactData = friendList.find((data) => data.id === id);
     exactData.messages = [];
   }
+  calleeId=exactData.friendName
   chatboxChattingDiv.innerHTML = chatboxChating(exactData);
   chatbox.gotoChat();
 }
@@ -127,7 +128,7 @@ let chatboxChating = (data) => {
     </div>
   </div>
   <div class="chat__callicon">
-  <img src="./images/icons/callIcon.svg" alt="" />
+  <img src="./images/icons/callIcon.svg" alt="" / onclick=audioCall()>
   <img src="./images/icons/videocall.svg" alt="" />
   </div>
 </div>

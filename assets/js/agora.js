@@ -40,9 +40,7 @@ class agoraFuntionality{
     }
 }
 
-let userName='shozonraj'
-// Your app ID
-const appID = "9726a69c2bd448108598e9e5a3d7e0d4"
+
 // Initialize client
 const client = AgoraRTM.createInstance(appID)
 
@@ -102,3 +100,16 @@ client.on('MessageFromPeer', function (message, peerId) {
     gotoChatList()
     document.getElementById("log").appendChild(document.createElement('div')).append("Message from: " + peerId.replace(/ /g,"_") + " Message: " + message.text)
 })
+
+
+// **********************************************
+const audioCall=()=>{
+    agoraCallInvitation.localInvitation(calleeId,userName.replace(/ /g,"_")+calleeId.replace(/ /g,"_"))
+}
+
+// client.on('RemoteInvitationReceived', (remoteInvitation) => {
+//     console.log(remoteInvitation)
+//     ocument.getElementById("log").appendChild(document.createElement('div')).append("Message from: ")
+// })
+
+

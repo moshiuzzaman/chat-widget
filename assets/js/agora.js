@@ -22,6 +22,7 @@ class agoraFuntionality{
           }
     }
     async sendPeerMessage(peerMessage,peerId){
+      scrollBottom()
         await client.sendMessageToPeer(
             { text: peerMessage },
             peerId,
@@ -102,6 +103,7 @@ client.on('MessageFromPeer', function (message, peerId) {
       chatListData=[exactMessagesData,...withoutExactMessagesData ]
       createRecivedMessageOutput(message.text,peerId)
     }
+    scrollBottom()
     gotoChatList()
     var chatEl = document.getElementById("cems__chatbox__messages");
       chatEl.scrollTop = chatEl.scrollHeight

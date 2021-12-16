@@ -3,6 +3,11 @@ let chatboxChattingDiv = document.getElementById("cems__chatbox__chatting");
 let chatlistHeaderText = document.getElementById("cems__chatlist__header__text");
 let chatboxMessagesDiv = document.getElementById("cems__chatbox__messages");
 
+let scrollBottom=()=>{
+  var chatEl = document.getElementById("cems__chatbox__messages");
+  chatEl.scrollTop = chatEl.scrollHeight
+}
+
 let chatsOrUsersToggle = (data) => {
   let element = `
     <div class="cems__chat__list" id='${data.id}' onclick={showMesseges(this.id)}>
@@ -49,6 +54,7 @@ function showMesseges(id) {
   }
   chatboxChattingDiv.innerHTML = chatboxChating(exactData);
   chatbox.gotoChat();
+  scrollBottom()
 }
 
 let backToChatList = () => {

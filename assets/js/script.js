@@ -10,12 +10,12 @@ let scrollBottom=()=>{
 
 let chatsOrUsersToggle = (data) => {
   let element = `
-    <div class="cems__chat__list" id='${data.id}' onclick={showMesseges(this.id)}>
+    <div class="cems__chat__list" id='${data.uid}' onclick={showMesseges(this.id)}>
     <div class="cems__friend__icon">
-      <p>${data.friendName.charAt(0)}</p>
+      <p>${data.name.charAt(0)}</p>
     </div>
     <div class="cems__chatlist__content">
-      <h4 class="cems__chatlist__friendName">${data.friendName}</h4>
+      <h4 class="cems__chatlist__friendName">${data.name}</h4>
     </div>
   </div>
     `;
@@ -46,10 +46,10 @@ let gotoUsers = () => {
 };
 function showMesseges(id) {
   console.log('object')
-  let exactData = chatListData.find((data) => data.id === id);
+  let exactData = chatListData.find((data) => data.uid === id);
   console.log(exactData,id)
   if (exactData === undefined) {
-    exactData = friendList.find((data) => data.id === id);
+    exactData = friendList.find((data) => data.uid === id);
     exactData.messages = [];
   }
   chatboxChattingDiv.innerHTML = chatboxChating(exactData);
@@ -88,22 +88,22 @@ let sendMessage = async (id) => {
     alert("write something");
   } else {
     document.getElementById("cems__input__message").value = "";
-    let exactMessagesData = chatListData.find((d) => d.id === id);
+    let exactMessagesData = chatListData.find((d) => d.uid === id);
     if (exactMessagesData === undefined) {
-      exactMessagesData = friendList.find((data) => data.id === id);
+      exactMessagesData = friendList.find((data) => data.uid === id);
       exactMessagesData.messages = [
         {
           messageType: 2,
           text: typeMessage,
           timeStamp: null,
-          username: "shozonraj",
+          username:allDetails.userName,
         },
       ];
       chatListData.unshift(exactMessagesData);
       document.getElementById("cems__chatbox__messages").innerHTML = "";
       createMessageOutput(typeMessage);
     } else {
-      let withoutExactMessagesData = chatListData.filter((d) => d.id !== id);
+      let withoutExactMessagesData = chatListData.filter((d) => d.uid !== id);
       if (exactMessagesData.messages.length === 0) {
         document.getElementById("cems__chatbox__messages").innerHTML = "";
       }
@@ -111,14 +111,14 @@ let sendMessage = async (id) => {
         messageType: 2,
         text: typeMessage,
         timeStamp: null,
-        username: "shozonraj",
+        username: allDetails.userName,
       });
       chatListData = [exactMessagesData, ...withoutExactMessagesData];
       createMessageOutput(typeMessage);
     }
     var chatEl = document.getElementById("cems__chatbox__messages");
     chatEl.scrollTop = chatEl.scrollHeight
-    await agoraFunction.sendPeerMessage(typeMessage, exactMessagesData.friendName);
+    await agoraFunction.sendPeerMessage(typeMessage, exactMessagesData.uid);
   }
 };
 
@@ -130,10 +130,10 @@ let chatboxChating = (data) => {
     <img src="./images/icons/backArrow.svg" alt="" />
     </div>
     <div class="cems__friend__icon">
-      <p>${data.friendName.charAt(0)}</p>
+      <p>${data.name.charAt(0)}</p>
     </div>
     <div class="cems__chatbox__content--header">
-      <h4 class="cems__chatbox__heading--header">${data.friendName}</h4>
+      <h4 class="cems__chatbox__heading--header">${data.name}</h4>
     </div>
   </div>
   <div class="cems__chat__callicon">
@@ -141,7 +141,7 @@ let chatboxChating = (data) => {
   <img src="./images/icons/videocall.svg" alt="" />
   </div>
 </div>
-<div id="cems__chatbox__messages" class="cems__messageFor${data.friendName.replace(/ /g, "_")}">
+<div id="cems__chatbox__messages" class="cems__messageFor${data.uid.replace(/ /g, "_")}">
   ${
     !data.messages.length
       ? `<p class="cems__no_found">No message found</p>`
@@ -151,7 +151,7 @@ let chatboxChating = (data) => {
 <div class="cems__chatbox__footer">
   <img src="./images/icons/attachment.svg" alt="" />
   <input id="cems__input__message" type="text" placeholder="Write a message..." />
-  <button class="cems__chatbox__send--footer" onclick=sendMessage('${data.id}')>Send</button>
+  <button class="cems__chatbox__send--footer" onclick=sendMessage('${data.uid}')>Send</button>
 </div>
   `;
 };

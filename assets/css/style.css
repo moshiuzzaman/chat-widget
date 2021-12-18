@@ -75,7 +75,6 @@ body {
 /* Messages */
 #cems__chatbox__messages {
   padding: 0 20px;
-  margin-bottom: -20px;
 }
 
 .cems__messages__item {
@@ -113,7 +112,6 @@ body {
   /* box-shadow: var(--secondaryBoxShadow); */
   border-bottom-right-radius: 10px;
   border-bottom-left-radius: 10px;
-  margin-top: 20px;
 }
 .cems__chatbox__chatlist__footer {
   justify-content: space-around;
@@ -168,6 +166,9 @@ body {
 }
 
 /* Chat aditional css */
+.cems__container h4 {
+  font-size: 19px;
+}
 #cems__chatbox_backButton--header img {
   width: 31px;
   justify-content: center;
@@ -228,4 +229,5 @@ p.cems__no_found {
   font-weight: bold;
   font-size: 20px;
   color: white;
+  margin-bottom: 0;
 }

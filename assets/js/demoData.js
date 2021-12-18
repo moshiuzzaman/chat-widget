@@ -1,11 +1,13 @@
-let userName='shozonraj'
-// Your app ID
-const appID = "9726a69c2bd448108598e9e5a3d7e0d4"
+
 let calleeId='s'
+let allDetails={
+   userName:'',
+}
+
 let chatListData = [
   {
-    friendName: "Zarif",
-    id: "chatlistData1",
+    name: "Zarif",
+    uid: "difs-234",
     messages: [
       {
         messageType: 3,
@@ -34,58 +36,41 @@ let chatListData = [
     ],
   },
   {
-    friendName: "Raj",
-    id: "chatlistData2",
+    name: "Raj",
+    uid: "difs-235",
     messages: [],
   },
   
 ];
 let friendList = [
   {
-    id: "chatlistData1",
-    friendName: "Zarif",
+    uid: "difs-234",
+    name: "Zarif",
   },
   
   {
-    friendName: "Raj",
-    id: "chatlistData2"
+    name: "Raj",
+    uid: "difs-235"
   },
   {
-    friendName: "Raj1",
-    id: "chatlistData3"
+    name: "Raj1",
+    uid: "difs-236"
   },
   {
-    friendName: "Raj3",
-    id: "chatlistData4"
+    name: "Raj3",
+    uid: "difs-237"
   },
   {
-    friendName: "shozon raj",
-    id: "chatlistData5"
+    name: "shozon raj",
+    uid: "difs-238"
   }
   
   
 ];
 
 
-let data=JSON.parse(localStorage.getItem(`CemsChatDataFor${userName.replace(/ /g, "_")}`))
-if(data===null){
-  // friendList=[]
-  // chatListData=[]
-}else{
-  if(data.friendList===undefined){
-    friendList=[]
-  }else{
-    friendList=data.friendList
-  }
-  if (data.chatListData===undefined){
-    chatListData=[]
-  }else{
-    chatListData=data.chatListData
-  }
-
-}
 
   window.addEventListener("beforeunload", function (e) {
     let CemsChatData={friendList:friendList,chatListData:chatListData}
-    localStorage.setItem(`CemsChatDataFor${userName.replace(/ /g, "_")}`,JSON.stringify(CemsChatData))
+    localStorage.setItem(`CemsChatDataFor${uid.replace(/ /g, "_")}`,JSON.stringify(CemsChatData))
   });

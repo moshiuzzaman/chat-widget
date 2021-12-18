@@ -25,7 +25,7 @@ let gotoChatList = () => {
   chatListsDiv.innerHTML = "";
   chatlistHeaderText.innerText = "Chats";
   if (chatListData.length < 1) {
-    chatListsDiv.innerHTML = `<p class="no_found">No Chats found</p>`;
+    chatListsDiv.innerHTML = `<p class="cems__no_found">No Chats found</p>`;
   } else {
     chatListData.map((data) => {
       chatsOrUsersToggle(data);
@@ -37,7 +37,7 @@ let gotoUsers = () => {
   chatListsDiv.innerHTML = "";
   chatlistHeaderText.innerText = "Users";
   if (friendList.length < 1) {
-    chatListsDiv.innerHTML = `<p class="no_found">No Friend found</p>`;
+    chatListsDiv.innerHTML = `<p class="cems__no_found">No Friend found</p>`;
   } else {
     friendList.map((data) => {
       chatsOrUsersToggle(data);
@@ -52,6 +52,7 @@ function showMesseges(id) {
     exactData = friendList.find((data) => data.uid === id);
     exactData.messages = [];
   }
+  calleeId=exactData.uid
   chatboxChattingDiv.innerHTML = chatboxChating(exactData);
   chatbox.gotoChat();
   scrollBottom()
@@ -66,6 +67,7 @@ let controlSentOrReciveMessage = (data) => {
   let chatboxMessages = document.createElement("ul");
 
   chatboxMessages.innerHTML = "";
+
   data.messages.map((m) => {
     if (m.messageType === 2) {
       chatboxMessages.innerHTML += `<div class="cems__messages__item cems__messages__item--operator">${m.text}</div>`;
@@ -137,7 +139,7 @@ let chatboxChating = (data) => {
     </div>
   </div>
   <div class="cems__chat__callicon">
-  <img src="./images/icons/callIcon.svg" alt="" />
+  <img src="./images/icons/callIcon.svg" alt="" / >
   <img src="./images/icons/videocall.svg" alt="" />
   </div>
 </div>
@@ -155,3 +157,23 @@ let chatboxChating = (data) => {
 </div>
   `;
 };
+
+
+// modal script************************
+var modal = document.getElementById("myModal");
+
+// Get the button that opens the modal
+var btn = document.getElementById("myBtn");
+
+// Get the <span> element that closes the modal
+var span = document.getElementsByClassName("close")[0];
+
+// When the user clicks the button, open the modal 
+btn.onclick = function() {
+  modal.style.display = "block";
+}
+
+// When the user clicks on <span> (x), close the modal
+span.onclick = function() {
+  modal.style.display = "none";
+}

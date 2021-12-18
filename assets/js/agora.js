@@ -1,8 +1,10 @@
 class agoraFuntionality {
   constructor() {
-    (this.userName = ''), (this.appId ='');
+    this.userName = '';
+     this.appId ='';
     this.token = "";
     this.client = '';
+    
   }
 
   async login(uid, name, appId) {
@@ -140,3 +142,69 @@ let agoraFunction = new agoraFuntionality();
           }
         }
   }
+
+  // **********************************************
+const log = console.log.bind(console);
+let status = "ofline";
+let remoteInvitation = null;
+let localInvitation = null;
+const audioCall = () => {
+  if (localInvitation !== null) {
+    localInvitation.removeAllListeners();
+    localInvitation = null;
+  }
+  localInvitation = client.createLocalInvitation(calleeId);
+
+  localInvitationEvents();
+  localInvitation.chanel = userName.replace(/ /g, "_") + calleeId.replace(/ /g, "_");
+  localInvitation.send();
+};
+let localInvitationEvents = () => {
+  // Send call invitation
+  
+  localInvitation.on("LocalInvitationReceivedByPeer", (r) => {
+    console.log("LocalInvitationReceivedByPeer" + r);
+  });
+  localInvitation.on("LocalInvitationAccepted", (r) => {
+    console.log("LocalInvitationAccepted" + r);
+  });
+  
+  localInvitation.on("LocalInvitationCanceled", (r) => {
+    console.log("LocalInvitationCanceled" + r);
+  });
+  
+  localInvitation.on("LocalInvitationRefused", (r) => {
+    console.log("LocalInvitationRefused" + r);
+  });
+  localInvitation.on("LocalInvitationFailure", (r) => {
+    console.log("LocalInvitationFailure" + r);
+  });
+  
+};
+
+client.on("RemoteInvitationReceived", (remoteInvitation) => {
+  if (remoteInvitation !== null) {
+    remoteInvitation.removeAllListeners();
+    remoteInvitation = null;
+  }
+  
+  remoteInvitation = remoteInvitation;
+  console.log('object')
+  // peerEvents();
+});
+
+let peerEvents=()=>{
+  remoteInvitation.on('RemoteInvitationAccepted',(r)=>{
+    console.log('RemoteInvitationAccepted'+ r)
+  })
+  remoteInvitation.on('RemoteInvitationCanceled',(r)=>{
+    console.log('RemoteInvitationCanceled'+ r)
+  })
+  remoteInvitation.on('RemoteInvitationRefused',(r)=>{
+    console.log('RemoteInvitationRefused'+ r)
+  })
+  remoteInvitation.on('RemoteInvitationFailure',(r)=>{
+    console.log('RemoteInvitationFailure'+ r)
+  })
+  
+}

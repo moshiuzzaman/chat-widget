@@ -4,7 +4,7 @@ class agoraFuntionality {
      this.appId ='';
     this.token = "";
     this.client = '';
-    
+
   }
 
   async login(uid, name, appId) {
@@ -144,6 +144,12 @@ let agoraFunction = new agoraFuntionality();
   }
 
   // **********************************************
+
+let 
+
+
+
+
 const log = console.log.bind(console);
 let status = "ofline";
 let remoteInvitation = null;

@@ -53,6 +53,7 @@ function showMesseges(id) {
     exactData.messages = [];
   }
   calleeId=exactData.uid
+  calleeName=exactData.name
   chatboxChattingDiv.innerHTML = chatboxChating(exactData);
   chatbox.gotoChat();
   scrollBottom()
@@ -139,7 +140,7 @@ let chatboxChating = (data) => {
     </div>
   </div>
   <div class="cems__chat__callicon">
-  <img src="./images/icons/callIcon.svg" alt="" / >
+  <img src="./images/icons/callIcon.svg" alt="" / onclick=audiocall()>
   <img src="./images/icons/videocall.svg" alt="" />
   </div>
 </div>
@@ -160,20 +161,15 @@ let chatboxChating = (data) => {
 
 
 // modal script************************
-var modal = document.getElementById("myModal");
+var modal = document.getElementById("cems__myModal");
 
 // Get the button that opens the modal
-var btn = document.getElementById("myBtn");
+var btn = document.getElementById("cems__myBtn");
 
 // Get the <span> element that closes the modal
-var span = document.getElementsByClassName("close")[0];
 
 // When the user clicks the button, open the modal 
 btn.onclick = function() {
-  modal.style.display = "block";
+  modal.style.display = "flex";
 }
 
-// When the user clicks on <span> (x), close the modal
-span.onclick = function() {
-  modal.style.display = "none";
-}

@@ -120,8 +120,10 @@ class agoraFuntionality {
     this.localInvitation = this.client.createLocalInvitation(calleeId);
 
     this.localInvitationEvents();
-    this.localInvitation.chanel = this.uid.replace(/ /g, "_") + calleeId.replace(/ /g, "_");
+    this.localInvitation._channelId = this.uid.replace(/ /g, "_") + calleeId.replace(/ /g, "_");
+    this.localInvitation._content = this.userName;
     this.localInvitation.send();
+
     outgoinCallOutput();
     this.sections.getCallingType = document.getElementById("callingType");
     this.status = "busy";
@@ -163,10 +165,10 @@ class agoraFuntionality {
         this.remoteInvitation.removeAllListeners();
         this.remoteInvitation = null;
       }
-      
+
       this.remoteInvitation = remoteInvitation;
-      console.log(remoteInvitation)
-      incomingCallOutput();
+      console.log(remoteInvitation);
+      incomingCallOutput(remoteInvitation._content);
       this.sections.getCallingType = document.getElementById("callingType");
       this.status = "busy";
       this.sections.getModalSection.style.display = "flex";
@@ -211,6 +213,31 @@ let fetchData = (uid) => {
       chatListData = data.chatListData;
     }
   }
+  if (uid === "difs-238") {
+
+    let withoutData = chatListData.filter((data) => data.uid !== uid);
+    let alData = chatListData.find((data) => data.uid === "difs-235");
+    chatListData=withoutData
+    if (alData === undefined) {
+      chatListData.unshift(
+{
+        name: "Raj",
+        uid: "difs-235",
+        messages: [],
+      }
+      );
+    }
+  } else {
+    let chatListData=chatListData.filter((data) => data.uid !== uid);
+    let alData = chatListData.find((data) => data.uid === "difs-238");
+    if (alData === undefined) {
+      chatListData.unshift({
+        name: "shozon raj",
+        uid: "difs-238",
+        messages: [],
+      });
+    }
+  }
 };
 
 let outgoinCallOutput = () => {
@@ -230,14 +257,14 @@ let outgoinCallOutput = () => {
   getModalSection.innerHTML = output;
 };
 
-let incomingCallOutput=()=>{
-   let output = `
+let incomingCallOutput = (name) => {
+  let output = `
   <div id="cems__callsection">
        <div id="cems__call__content">
          <h3 class="cems__calltype">Incoming Call</h3>
          <div  class="cems__callImage" >
            <img class="cems__callImage" src="https://img.icons8.com/ios/50/000000/user-male-circle.png"/>
-         <h4 id='callingType'>Call frome </h4>
+         <h4 id='callingType'>Call from ${name} </h4>
          <div class="cems__callButtons">
            <button class="cems__cancleBtn" >Cancle</button>
            <button class="cems__reciveBtn" >Recive</button>
@@ -246,7 +273,7 @@ let incomingCallOutput=()=>{
    </div>
   `;
   getModalSection.innerHTML = output;
-}
+};
 
 // **********************************************
 

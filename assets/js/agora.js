@@ -123,8 +123,7 @@ class agoraFuntionality {
     this.localInvitation._channelId = this.uid.replace(/ /g, "_") + calleeId.replace(/ /g, "_");
     this.localInvitation._content = this.userName;
     this.localInvitation.send();
-
-    outgoinCallOutput();
+    this.sections.getModalSection.innerHTML = outgoinCallOutput();
     this.sections.getCallingType = document.getElementById("callingType");
     this.status = "busy";
     this.sections.getModalSection.style.display = "flex";
@@ -155,6 +154,12 @@ class agoraFuntionality {
     });
   };
 
+  cancelOutgoingCall() {
+    this.localInvitation.cancel();
+    this.status = "online";
+    this.sections.getModalSection.style.display = "none";
+  }
+
   RemoteInvitationReceived() {
     this.client.on("RemoteInvitationReceived", (remoteInvitation) => {
       if (this.status !== "online") {
@@ -167,21 +172,47 @@ class agoraFuntionality {
       }
 
       this.remoteInvitation = remoteInvitation;
-      console.log(remoteInvitation);
       incomingCallOutput(remoteInvitation._content);
       this.sections.getCallingType = document.getElementById("callingType");
       this.status = "busy";
       this.sections.getModalSection.style.display = "flex";
-      // peerEvents();
+      this.peerEvents();
     });
+  }
+
+  peerEvents = () => {
+    this.remoteInvitation.on("RemoteInvitationReceived", (r) => {
+      console.log("RemoteInvitationReceived" + r);
+    });
+    this.remoteInvitation.on("RemoteInvitationAccepted", (r) => {
+      console.log("RemoteInvitationAccepted" + r);
+    });
+    this.remoteInvitation.on("RemoteInvitationCanceled", (r) => {
+      console.log("RemoteInvitationCanceled" + r);
+    });
+    this.remoteInvitation.on("RemoteInvitationRefused", (r) => {
+      console.log("RemoteInvitationRefused" + r);
+    });
+    this.remoteInvitation.on("RemoteInvitationFailure", (r) => {
+      console.log("RemoteInvitationFailure" + r);
+    });
+  };
+  cancelIncomingCall() {
+    this.remoteInvitation.refuse();
+    this.status = "online";
+    this.sections.getModalSection.style.display = "none";
+  }
+  reciveIncomingCall() {
+    this.remoteInvitation.accept();
   }
 }
 
-var getModalSection = document.getElementById("cems__myModal");
+let getModalSection = document.getElementById("cems__myModal");
+console.log(getModalSection);
 let agoraFunction = new agoraFuntionality(getModalSection);
 
-let audiocall = () => {
-  agoraFunction.audioCall();
+let cancelOutgoingCall = () => {
+  agoraFunction.cancelOutgoingCall();
 };
 
 let createRecivedMessageOutput = (message, peerId) => {
@@ -214,21 +245,19 @@ let fetchData = (uid) => {
     }
   }
   if (uid === "difs-238") {
-
     let withoutData = chatListData.filter((data) => data.uid !== uid);
     let alData = chatListData.find((data) => data.uid === "difs-235");
-    chatListData=withoutData
+    chatListData = withoutData;
+    console.log(alData);
     if (alData === undefined) {
-      chatListData.unshift(
-{
+      chatListData.unshift({
         name: "Raj",
         uid: "difs-235",
         messages: [],
-      }
-      );
+      });
     }
   } else {
-    let withoutData=chatListData.filter((data) => data.uid !== uid);
+    let withoutData = chatListData.filter((data) => data.uid !== uid);
     let alData = chatListData.find((data) => data.uid === "difs-238");
     chatListData=withoutData
     if (alData === undefined) {
@@ -242,7 +271,7 @@ let fetchData = (uid) => {
 };
 
 let outgoinCallOutput = () => {
-  let output = `
+  return `
   <div id="cems__callsection">
        <div id="cems__call__content">
          <h3 class="cems__calltype">Outgoing Call</h3>
@@ -250,12 +279,11 @@ let outgoinCallOutput = () => {
            <img class="cems__callImage" src="https://img.icons8.com/ios/50/000000/user-male-circle.png"/>
          <h4 id='callingType'>Call ${calleeName} </h4>
          <div class="cems__callButtons">
-           <button class="cems__cancleBtn" >Cancle</button>
+           <button class="cems__cancleBtn" onclick=cancelOutgoingCall()>Cancle</button>
          </div>
        </div>
    </div>
   `;
-  getModalSection.innerHTML = output;
 };
 
 let incomingCallOutput = (name) => {
@@ -279,29 +307,3 @@ let incomingCallOutput = (name) => {
 // **********************************************
 
 const log = console.log.bind(console);
-
-// client.on("RemoteInvitationReceived", (remoteInvitation) => {
-//   if (remoteInvitation !== null) {
-//     remoteInvitation.removeAllListeners();
-//     remoteInvitation = null;
-//   }
-
-//   remoteInvitation = remoteInvitation;
-//   console.log("object");
-//   // peerEvents();
-// });
-
-let peerEvents = () => {
-  remoteInvitation.on("RemoteInvitationAccepted", (r) => {
-    console.log("RemoteInvitationAccepted" + r);
-  });
-  remoteInvitation.on("RemoteInvitationCanceled", (r) => {
-    console.log("RemoteInvitationCanceled" + r);
-  });
-  remoteInvitation.on("RemoteInvitationRefused", (r) => {
-    console.log("RemoteInvitationRefused" + r);
-  });
-  remoteInvitation.on("RemoteInvitationFailure", (r) => {
-    console.log("RemoteInvitationFailure" + r);
-  });
-};

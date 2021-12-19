@@ -140,7 +140,7 @@ let chatboxChating = (data) => {
     </div>
   </div>
   <div class="cems__chat__callicon">
-  <img src="./images/icons/callIcon.svg" alt="" / onclick=audiocall()>
+  <img src="./images/icons/callIcon.svg" alt="" / onclick=agoraFunction.audioCall()>
   <img src="./images/icons/videocall.svg" alt="" />
   </div>
 </div>

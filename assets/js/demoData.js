@@ -21,19 +21,7 @@ let chatListData = [
         text: "shozonraj Called you",
         timeStamp: null,
         username: "shozonraj",
-      },
-      {
-        messageType: 2,
-        text: "shozonraj Called you",
-        timeStamp: null,
-        username: "shozonraj",
-      },
-      {
-        messageType: 3,
-        text: "<sprite=1><sprite=1><sprite=1> dfgry segre gbredg retg rgrdg regh",
-        timeStamp: null,
-        username: "Zarif",
-      },
+      }
     ],
   },
   {
@@ -54,6 +42,10 @@ let friendList = [
     uid: "difs-235"
   },
   {
+    name: "shozon raj",
+    uid: "difs-238"
+  },
+  {
     name: "Raj1",
     uid: "difs-236"
   },
@@ -62,16 +54,14 @@ let friendList = [
     uid: "difs-237"
   },
   {
-    name: "shozon raj",
-    uid: "difs-238"
+    name: "shozonraj",
+    uid: "difs-233"
   }
-  
-  
 ];
 
 
 
-  window.addEventListener("beforeunload", function (e) {
-    let CemsChatData={friendList:friendList,chatListData:chatListData}
-    localStorage.setItem(`CemsChatDataFor${uid.replace(/ /g, "_")}`,JSON.stringify(CemsChatData))
-  });
+  // window.addEventListener("beforeunload", function (e) {
+  //   let CemsChatData={friendList:friendList,chatListData:chatListData}
+  //   localStorage.setItem(`CemsChatDataFor${uid.replace(/ /g, "_")}`,JSON.stringify(CemsChatData))
+  // });

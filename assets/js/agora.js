@@ -13,7 +13,14 @@ class agoraFuntionality {
     this.remoteInvitation = null;
     this.localInvitation = null;
   }
-
+  hidecall(res){
+    this.sections.getCallingType.innerHTML = res;
+    document.getElementsByClassName('cems__callButtons')[0].style.display='none'
+    setTimeout(() => {
+      this.status = "online";
+      this.sections.getModalSection.style.display = "none";
+    }, 3000);
+  }
   async login(uid, name, appId) {
     this.uid = uid;
     this.appId = appId;
@@ -71,45 +78,10 @@ class agoraFuntionality {
 
   peerMessageRecive() {
     this.client.on("MessageFromPeer", function (message, peerId) {
-      let exactMessagesData = chatListData.find((d) => d.uid === peerId);
-      if (exactMessagesData === undefined) {
-        console.log("object");
-        exactMessagesData = friendList.find((data) => data.uid === peerId);
-        exactMessagesData.messages = [
-          {
-            messageType: 3,
-            text: message.text,
-            timeStamp: null,
-            username: peerId,
-          },
-        ];
-        chatListData.unshift(exactMessagesData);
-        document.getElementById("cems__chatbox__messages").innerHTML = "";
-        createRecivedMessageOutput(message.text, peerId);
-      } else {
-        let withoutExactMessagesData = chatListData.filter((d) => d.uid !== peerId);
-        if (exactMessagesData.messages.length === 0) {
-          document.getElementById("cems__chatbox__messages").innerHTML = "";
-        }
-        exactMessagesData.messages.push({
-          messageType: 3,
-          text: message.text,
-          timeStamp: null,
-          username: peerId,
-        });
-        chatListData = [exactMessagesData, ...withoutExactMessagesData];
-        createRecivedMessageOutput(message.text, peerId);
-      }
-      scrollBottom();
-      gotoChatList();
-      var chatEl = document.getElementById("cems__chatbox__messages");
-      chatEl.scrollTop = chatEl.scrollHeight;
-      document
-        .getElementById("cems__log")
-        .appendChild(document.createElement("div"))
-        .append("Message from: " + peerId.replace(/ /g, "_") + " Message: " + message.text);
+      reciveMessageStoreAndOutput(message,peerId)
     });
   }
+
 
   audioCall = () => {
     if (this.localInvitation !== null) {
@@ -127,7 +99,11 @@ class agoraFuntionality {
     this.sections.getCallingType = document.getElementById("callingType");
     this.status = "busy";
     this.sections.getModalSection.style.display = "flex";
+    sendMessage(calleeId,`You called ${calleeName}`)
   };
+
+
+
   localInvitationEvents = () => {
     // Send call invitation
 
@@ -143,14 +119,10 @@ class agoraFuntionality {
     });
 
     this.localInvitation.on("LocalInvitationRefused", (r) => {
-      console.log("LocalInvitationRefused" + r);
+      this.hidecall(`${calleeName} busy now` )
     });
     this.localInvitation.on("LocalInvitationFailure", (r) => {
-      this.sections.getCallingType.innerHTML = r;
-      setTimeout(() => {
-        this.status = "online";
-        this.sections.getModalSection.style.display = "none";
-      }, 3000);
+      this.hidecall(r)
     });
   };
 
@@ -177,6 +149,7 @@ class agoraFuntionality {
       this.status = "busy";
       this.sections.getModalSection.style.display = "flex";
       this.peerEvents();
+      reciveMessageStoreAndOutput({text:`${remoteInvitation._content} called You`},remoteInvitation.callerId)
     });
   }
 
@@ -188,13 +161,14 @@ class agoraFuntionality {
       console.log("RemoteInvitationAccepted" + r);
     });
     this.remoteInvitation.on("RemoteInvitationCanceled", (r) => {
-      console.log("RemoteInvitationCanceled" + r);
+      this.hidecall(`${this.remoteInvitation._content} canceled the call`)
     });
     this.remoteInvitation.on("RemoteInvitationRefused", (r) => {
-      console.log("RemoteInvitationRefused" + r);
+      console.log('RemoteInvitationRefused ' +r)
+      
     });
     this.remoteInvitation.on("RemoteInvitationFailure", (r) => {
-      console.log("RemoteInvitationFailure" + r);
+      this.hidecall(r)
     });
   };
   cancelIncomingCall() {
@@ -283,7 +257,7 @@ let outgoinCallOutput = () => {
          <div  class="cems__callImage" >
            <img class="cems__callImage" src="https://img.icons8.com/ios/50/000000/user-male-circle.png"/>
          <h4 id='callingType'>Call ${calleeName} </h4>
-         <div class="cems__callButtons">
+         <div class="cems__callButtons" >
            <button class="cems__cancleBtn" onclick=cancelOutgoingCall()>Cancle</button>
          </div>
        </div>
@@ -308,6 +282,46 @@ let incomingCallOutput = (name) => {
   `;
   getModalSection.innerHTML = output;
 };
+
+let reciveMessageStoreAndOutput=(message, peerId)=>{
+  
+  let exactMessagesData = chatListData.find((d) => d.uid === peerId);
+  if (exactMessagesData === undefined) {
+    exactMessagesData = friendList.find((data) => data.uid === peerId);
+    exactMessagesData.messages = [
+      {
+        messageType: 3,
+        text: message.text,
+        timeStamp: null,
+        username: peerId,
+      },
+    ];
+    chatListData.unshift(exactMessagesData);
+    document.getElementById("cems__chatbox__messages").innerHTML = "";
+    createRecivedMessageOutput(message.text, peerId);
+  } else {
+    let withoutExactMessagesData = chatListData.filter((d) => d.uid !== peerId);
+    if (exactMessagesData.messages.length === 0) {
+      document.getElementById("cems__chatbox__messages").innerHTML = "";
+    }
+    exactMessagesData.messages.push({
+      messageType: 3,
+      text: message.text,
+      timeStamp: null,
+      username: peerId,
+    });
+    chatListData = [exactMessagesData, ...withoutExactMessagesData];
+    createRecivedMessageOutput(message.text, peerId);
+  }
+  scrollBottom();
+  gotoChatList();
+  var chatEl = document.getElementById("cems__chatbox__messages");
+  chatEl.scrollTop = chatEl.scrollHeight;
+  document
+    .getElementById("cems__log")
+    .appendChild(document.createElement("div"))
+    .append("Message from: " + peerId.replace(/ /g, "_") + " Message: " + message.text);
+}
 
 // **********************************************
 

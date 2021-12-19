@@ -3,10 +3,10 @@ let chatboxChattingDiv = document.getElementById("cems__chatbox__chatting");
 let chatlistHeaderText = document.getElementById("cems__chatlist__header__text");
 let chatboxMessagesDiv = document.getElementById("cems__chatbox__messages");
 
-let scrollBottom=()=>{
+let scrollBottom = () => {
   var chatEl = document.getElementById("cems__chatbox__messages");
-  chatEl.scrollTop = chatEl.scrollHeight
-}
+  chatEl.scrollTop = chatEl.scrollHeight;
+};
 
 let chatsOrUsersToggle = (data) => {
   let element = `
@@ -45,18 +45,18 @@ let gotoUsers = () => {
   }
 };
 function showMesseges(id) {
-  console.log('object')
+  console.log("object");
   let exactData = chatListData.find((data) => data.uid === id);
-  console.log(exactData,id)
+  console.log(exactData, id);
   if (exactData === undefined) {
     exactData = friendList.find((data) => data.uid === id);
     exactData.messages = [];
   }
-  calleeId=exactData.uid
-  calleeName=exactData.name
+  calleeId = exactData.uid;
+  calleeName = exactData.name;
   chatboxChattingDiv.innerHTML = chatboxChating(exactData);
   chatbox.gotoChat();
-  scrollBottom()
+  scrollBottom();
 }
 
 let backToChatList = () => {
@@ -85,8 +85,13 @@ let createMessageOutput = (message) => {
   createMessageOutput.innerHTML = `${message}`;
   document.getElementById("cems__chatbox__messages").appendChild(createMessageOutput);
 };
-let sendMessage = async (id) => {
-  let typeMessage = document.getElementById("cems__input__message").value;
+let sendMessage = async (id, message = null) => {
+  let typeMessage;
+  if (message === null) {
+    typeMessage = document.getElementById("cems__input__message").value;
+  } else {
+    typeMessage = message;
+  }
   if (typeMessage.length === 0) {
     alert("write something");
   } else {
@@ -99,7 +104,7 @@ let sendMessage = async (id) => {
           messageType: 2,
           text: typeMessage,
           timeStamp: null,
-          username:allDetails.userName,
+          username: allDetails.userName,
         },
       ];
       chatListData.unshift(exactMessagesData);
@@ -120,7 +125,7 @@ let sendMessage = async (id) => {
       createMessageOutput(typeMessage);
     }
     var chatEl = document.getElementById("cems__chatbox__messages");
-    chatEl.scrollTop = chatEl.scrollHeight
+    chatEl.scrollTop = chatEl.scrollHeight;
     await agoraFunction.sendPeerMessage(typeMessage, exactMessagesData.uid);
   }
 };
@@ -159,7 +164,6 @@ let chatboxChating = (data) => {
   `;
 };
 
-
 // modal script************************
 var modal = document.getElementById("cems__myModal");
 
@@ -168,8 +172,7 @@ var btn = document.getElementById("cems__myBtn");
 
 // Get the <span> element that closes the modal
 
-// When the user clicks the button, open the modal 
-btn.onclick = function() {
+// When the user clicks the button, open the modal
+btn.onclick = function () {
   modal.style.display = "flex";
-}
-
+};

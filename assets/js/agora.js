@@ -214,7 +214,12 @@ let agoraFunction = new agoraFuntionality(getModalSection);
 let cancelOutgoingCall = () => {
   agoraFunction.cancelOutgoingCall();
 };
-
+let reciveIncomingCall=()=>{
+  agoraFunction.reciveIncomingCall()
+}
+let cancelIncoingCall=()=>{
+  agoraFunction.cancelIncomingCall()
+}
 let createRecivedMessageOutput = (message, peerId) => {
   let createMessageOutput = document.createElement("div");
   createMessageOutput.className = "cems__messages__item cems__messages__item--visitor";
@@ -294,8 +299,8 @@ let incomingCallOutput = (name) => {
            <img class="cems__callImage" src="https://img.icons8.com/ios/50/000000/user-male-circle.png"/>
          <h4 id='callingType'>Call from ${name} </h4>
          <div class="cems__callButtons">
-           <button class="cems__cancleBtn" >Cancle</button>
-           <button class="cems__reciveBtn" >Recive</button>
+           <button class="cems__cancleBtn" onclick=cancelIncoingCall()>Cancle</button>
+           <button class="cems__reciveBtn" onclick=reciveIncomingCall()>Recive</button>
          </div>
        </div>
    </div>

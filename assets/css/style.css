@@ -213,6 +213,9 @@ p.cems__no_found {
   border-bottom: 1px solid #0998f5;
   margin: 0px 21px;
 }
+.unseen__message h4 {
+  color: red !important;
+}
 .cems__friend__icon {
   background: #0998f5;
   text-align: center;

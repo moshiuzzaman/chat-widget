@@ -1,6 +1,7 @@
 
 let calleeId='s'
 let calleeName=''
+let unreadMessageId=[]
 let allDetails={
    userName:'',
 }
@@ -12,13 +13,13 @@ let chatListData = [
     messages: [
       {
         messageType: 3,
-        text: "Zarif Called you",
+        text: "How are you",
         timeStamp: null,
         username: "Zarif",
       },
       {
         messageType: 2,
-        text: "shozonraj Called you",
+        text: "I am fine.",
         timeStamp: null,
         username: "shozonraj",
       }

@@ -62,6 +62,9 @@ class agoraFuntionality {
   async sendPeerMessage(message, peerId) {
 
     scrollBottom();
+    if(message.type==='call'){
+      return
+    }
     await this.client.sendMessageToPeer({ text: message.text }, peerId).then((sendResult) => {
       if (sendResult.hasPeerReceived) {
         document
@@ -79,6 +82,9 @@ class agoraFuntionality {
 
   peerMessageRecive() {
     this.client.on("MessageFromPeer", function (message, peerId) {
+
+      let withOutUnreadMessageId=unreadMessageId.filter(id=>id!==peerId)
+      unreadMessageId=[...withOutUnreadMessageId,peerId]
       reciveMessageStoreAndOutput(message,peerId)
     });
   }
@@ -203,6 +209,7 @@ let createRecivedMessageOutput = (message, peerId) => {
   let isClass = document.getElementsByClassName(`cems__messageFor${className}`)[0];
 
   if (isClass !== undefined) {
+    unreadMessageId=unreadMessageId.filter(uid=>uid!==peerId)
     isClass.appendChild(createMessageOutput);
   }
 };

@@ -7,8 +7,7 @@ let scrollBottom = () => {
   var chatEl = document.getElementById("cems__chatbox__messages");
   chatEl.scrollTop = chatEl.scrollHeight;
 };
-
-let chatsOrUsersToggle = (data) => {
+let usersToggle = (data) => {
   let element = `
     <div class="cems__chat__list" id='${data.uid}' onclick={showMesseges(this.id)}>
     <div class="cems__friend__icon">
@@ -21,18 +20,52 @@ let chatsOrUsersToggle = (data) => {
     `;
   return (chatListsDiv.innerHTML += element);
 };
+let chatsToggle = (data) => {
+  let lastMessageDetails=data.messages.pop()
+  
+  let lastMessage=''
+  if (lastMessageDetails!==undefined){
+    data.messages.push(lastMessageDetails)
+    if(lastMessageDetails.messageType===2){
+      lastMessage= `You : ${lastMessageDetails.text}`
+    }else{
+      lastMessage=  lastMessageDetails.text
+    }
+  }
+  let isUnread=unreadMessageId.find(id=>id===data.uid)
+  let setclass=''
+  if(isUnread!==undefined){
+    setclass='unseen__message'
+  }
+  let element = `
+    <div class="cems__chat__list ${setclass}" id='${data.uid}' onclick={showMesseges(this.id)}>
+    <div class="cems__friend__icon">
+      <p>${data.name.toUpperCase().charAt(0)}</p>
+    </div>
+    <div class="cems__chatlist__content">
+      <h4 class="cems__chatlist__friendName">${data.name}</h4>
+      <p> ${lastMessage}</p>
+    </div>
+  </div>
+    `;
+  return (chatListsDiv.innerHTML += element);
+};
 let gotoChatList = () => {
+  let className = calleeId.replace(/ /g, "_");
+  let isClass = document.getElementsByClassName(`cems__messageFor${className}`)[0];
+  if (isClass !== undefined) {
+    isClass.classList.remove(`cems__messageFor${className}`)
+  }
   chatListsDiv.innerHTML = "";
   chatlistHeaderText.innerText = "Chats";
   if (chatListData.length < 1) {
     chatListsDiv.innerHTML = `<p class="cems__no_found">No Chats found</p>`;
   } else {
     chatListData.map((data) => {
-      chatsOrUsersToggle(data);
+      chatsToggle(data);
     });
   }
 };
-gotoChatList();
 let gotoUsers = () => {
   chatListsDiv.innerHTML = "";
   chatlistHeaderText.innerText = "Users";
@@ -40,20 +73,20 @@ let gotoUsers = () => {
     chatListsDiv.innerHTML = `<p class="cems__no_found">No Friend found</p>`;
   } else {
     friendList.map((data) => {
-      chatsOrUsersToggle(data);
+      usersToggle(data);
     });
   }
 };
 function showMesseges(id) {
-  console.log("object");
   let exactData = chatListData.find((data) => data.uid === id);
-  console.log(exactData, id);
   if (exactData === undefined) {
     exactData = friendList.find((data) => data.uid === id);
     exactData.messages = [];
   }
   calleeId = exactData.uid;
+  unreadMessageId=unreadMessageId.filter(uid=>uid!==exactData.uid)
   calleeName = exactData.name;
+  console.log(exactData)
   chatboxChattingDiv.innerHTML = chatboxChating(exactData);
   chatbox.gotoChat();
   scrollBottom();
@@ -139,7 +172,7 @@ let chatboxChating = (data) => {
     <img src="./images/icons/backArrow.svg" alt="" />
     </div>
     <div class="cems__friend__icon">
-      <p>${data.name.charAt(0)}</p>
+      <p>${data.name.toUpperCase().charAt(0)}</p>
     </div>
     <div class="cems__chatbox__content--header">
       <h4 class="cems__chatbox__heading--header">${data.name}</h4>

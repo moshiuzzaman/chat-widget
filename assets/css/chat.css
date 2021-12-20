@@ -57,7 +57,7 @@
     flex-direction: column;
     overflow-y: scroll;
     /* flex-direction: column-reverse; */
-    min-height: 74%;
+    min-height: 70%;
 }
 
 .cems__messages__item {

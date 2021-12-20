@@ -86,13 +86,14 @@ let createMessageOutput = (message) => {
   document.getElementById("cems__chatbox__messages").appendChild(createMessageOutput);
 };
 let sendMessage = async (id, message = null) => {
-  let typeMessage;
   if (message === null) {
     typeMessage = document.getElementById("cems__input__message").value;
-  } else {
-    typeMessage = message;
+    message={
+      text:typeMessage,
+      type:'text'
+    }
   }
-  if (typeMessage.length === 0) {
+  if (message.text.length === 0) {
     alert("write something");
   } else {
     document.getElementById("cems__input__message").value = "";
@@ -102,14 +103,14 @@ let sendMessage = async (id, message = null) => {
       exactMessagesData.messages = [
         {
           messageType: 2,
-          text: typeMessage,
+          text: message.text,
           timeStamp: null,
           username: allDetails.userName,
         },
       ];
       chatListData.unshift(exactMessagesData);
       document.getElementById("cems__chatbox__messages").innerHTML = "";
-      createMessageOutput(typeMessage);
+      createMessageOutput(message.text);
     } else {
       let withoutExactMessagesData = chatListData.filter((d) => d.uid !== id);
       if (exactMessagesData.messages.length === 0) {
@@ -117,16 +118,16 @@ let sendMessage = async (id, message = null) => {
       }
       exactMessagesData.messages.push({
         messageType: 2,
-        text: typeMessage,
+        text: message.text,
         timeStamp: null,
         username: allDetails.userName,
       });
       chatListData = [exactMessagesData, ...withoutExactMessagesData];
-      createMessageOutput(typeMessage);
+      createMessageOutput(message.text);
     }
     var chatEl = document.getElementById("cems__chatbox__messages");
     chatEl.scrollTop = chatEl.scrollHeight;
-    await agoraFunction.sendPeerMessage(typeMessage, exactMessagesData.uid);
+    await agoraFunction.sendPeerMessage(message, exactMessagesData.uid);
   }
 };
 

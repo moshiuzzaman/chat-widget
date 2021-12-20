@@ -59,19 +59,20 @@ class agoraFuntionality {
       console.error(error);
     }
   }
-  async sendPeerMessage(peerMessage, peerId) {
+  async sendPeerMessage(message, peerId) {
+
     scrollBottom();
-    await this.client.sendMessageToPeer({ text: peerMessage }, peerId).then((sendResult) => {
+    await this.client.sendMessageToPeer({ text: message.text }, peerId).then((sendResult) => {
       if (sendResult.hasPeerReceived) {
         document
           .getElementById("cems__log")
           .appendChild(document.createElement("div"))
-          .append("Message has been received by: " + peerId + " Message: " + peerMessage);
+          .append("Message has been received by: " + peerId + " Message: " + message.text);
       } else {
         document
           .getElementById("cems__log")
           .appendChild(document.createElement("div"))
-          .append("Message sent to: " + peerId + " Message: " + peerMessage);
+          .append("Message sent to: " + peerId + " Message: " + message.text);
       }
     });
   }
@@ -99,7 +100,7 @@ class agoraFuntionality {
     this.sections.getCallingType = document.getElementById("callingType");
     this.status = "busy";
     this.sections.getModalSection.style.display = "flex";
-    sendMessage(calleeId,`You called ${calleeName}`)
+    sendMessage(calleeId,{text:`You called ${calleeName}`,type:'call'})
   };
 
 
@@ -149,7 +150,7 @@ class agoraFuntionality {
       this.status = "busy";
       this.sections.getModalSection.style.display = "flex";
       this.peerEvents();
-      reciveMessageStoreAndOutput({text:`${remoteInvitation._content} called You`},remoteInvitation.callerId)
+      reciveMessageStoreAndOutput({text:`${remoteInvitation._content} called You`,type:'call'},remoteInvitation.callerId)
     });
   }
 
@@ -247,6 +248,7 @@ let fetchData = (uid) => {
       });
     }
   }
+  console.log(JSON.stringify(chatListData))
 };
 
 let outgoinCallOutput = () => {

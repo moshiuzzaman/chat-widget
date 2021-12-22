@@ -86,7 +86,6 @@ function showMesseges(id) {
   calleeId = exactData.uid;
   unreadMessageId=unreadMessageId.filter(uid=>uid!==exactData.uid)
   calleeName = exactData.name;
-  console.log(exactData)
   chatboxChattingDiv.innerHTML = chatboxChating(exactData);
   chatbox.gotoChat();
   scrollBottom();

@@ -6,10 +6,10 @@
 
 *,
 html {
-  --primaryGradient: linear-gradient(93.cems__12deg, #ffffff 0.cems__52%, #f0e9e9 100%);
-  --secondaryGradient: linear-gradient(268.cems__91deg, #fefeff -2.cems__14%, #ffffff 99.cems__69%);
-  --primaryBoxShadow: 0px 10px 15px rgba(105, 102, 102, 0.cems__1);
-  --secondaryBoxShadow: 0px -10px 15px rgba(0, 0, 0, 0.cems__1);
+  --primaryGradient: linear-gradient(93.12deg, #ffffff 0.52%, #f0e9e9 100%);
+  --secondaryGradient: linear-gradient(268.91deg, #fefeff -2.14%, #ffffff 99.69%);
+  --primaryBoxShadow: 0px 10px 15px rgba(105, 102, 102, 0.1);
+  --secondaryBoxShadow: 0px -10px 15px rgba(0, 0, 0, 0.1);
   --light: 300;
   --regular: 400;
   --semiBold: 600;
@@ -31,7 +31,7 @@ body {
   background: #f9f9f9;
   height: 430px;
   width: 375px;
-  box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.cems__1);
+  box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.1);
   border-radius: 20px;
   position: fixed;
   right: 32px;
@@ -161,7 +161,7 @@ body {
   border-top-left-radius: 50px;
   border-top-right-radius: 50px;
   border-bottom-left-radius: 50px;
-  box-shadow: 0px 10px 15px rgba(0, 0, 0, 0.cems__1);
+  box-shadow: 0px 10px 15px rgba(0, 0, 0, 0.1);
   cursor: pointer;
 }
 

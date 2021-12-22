@@ -21,6 +21,7 @@ class agoraFuntionality {
       this.sections.getModalSection.style.display = "none";
     }, 3000);
   }
+
   async login(uid, name, appId) {
     this.uid = uid;
     this.appId = appId;
@@ -29,7 +30,10 @@ class agoraFuntionality {
     this.client = AgoraRTM.createInstance(appId);
     await this.client
       .login({ uid, token: this.token })
-      .then(() => {
+      .then(async() => {
+        let auth=await getAuthToken()
+        let data=await getChatData(auth.token,auth.uid)
+        console.log(data.data.data)
         this.peerMessageRecive();
         this.RemoteInvitationReceived();
         this.status = "online";
@@ -39,7 +43,7 @@ class agoraFuntionality {
           .appendChild(document.createElement("div"))
           .append("login as " + name + "id " + uid);
         document.getElementById("cems__chatbox__button").classList.remove("cems__hide__section");
-        fetchData(uid);
+         fetchData(uid,data.data.data);
         gotoChatList();
       })
       .catch((err) => {
@@ -214,50 +218,6 @@ let createRecivedMessageOutput = (message, peerId) => {
   }
 };
 
-let fetchData = (uid) => {
-  let data = JSON.parse(localStorage.getItem(`CemsChatDataFor${uid.replace(/ /g, "_")}`));
-  if (data === null) {
-    // friendList=[]
-    // chatListData=[]
-  } else {
-    if (data.friendList === undefined) {
-      friendList = [];
-    } else {
-      friendList = data.friendList;
-    }
-    if (data.chatListData === undefined) {
-      chatListData = [];
-    } else {
-      chatListData = data.chatListData;
-    }
-  }
-  if (uid === "difs-238") {
-    let withoutData = chatListData.filter((data) => data.uid !== uid);
-    let alData = chatListData.find((data) => data.uid === "difs-235");
-    chatListData = withoutData;
-    console.log(alData);
-    if (alData === undefined) {
-      chatListData.unshift({
-        name: "Raj",
-        uid: "difs-235",
-        messages: [],
-      });
-    }
-  } else {
-    let withoutData = chatListData.filter((data) => data.uid !== uid);
-    let alData = chatListData.find((data) => data.uid === "difs-238");
-    chatListData=withoutData
-    if (alData === undefined) {
-      chatListData.unshift({
-        name: "shozon raj",
-        uid: "difs-238",
-        messages: [],
-      });
-    }
-  }
-  console.log(JSON.stringify(chatListData))
-};
-
 let outgoinCallOutput = () => {
   return `
   <div id="cems__callsection">
@@ -333,5 +293,35 @@ let reciveMessageStoreAndOutput=(message, peerId)=>{
 }
 
 // **********************************************
+
+
+let getAuthToken=async()=>{
+  try {
+    const response = await axios.post(
+      `https://tradazine.com/api/v1/login?username=user4@gmail.com&password=123456`
+      // `https://tradazine.com/api/v1/login?username=hamidur@cems.com&password=123456`
+    );
+    let res={
+      token:response.data.access_token,
+      uid:response.data.chat_uid
+    }
+      return await res
+    // return await response.data.token;
+  } catch (error) {
+    console.error(error);
+  }
+}
+let getChatData=async(authToken,uid)=>{
+  let id=uid.split("-")[1]
+  try {
+    let response=await axios.get(`https://tradazine.com/api/v1/all-chat-message/${id}`,{
+      headers: {'Authorization': `Bearer ${authToken}`}
+    })
+    return await response
+  } catch(err){
+    console.error(err)
+  }
+}
+
 
 const log = console.log.bind(console);

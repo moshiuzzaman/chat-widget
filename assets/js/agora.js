@@ -22,7 +22,7 @@ class agoraFuntionality {
     }, 3000);
   }
 
-  async login(uid, name, appId) {
+  async login(uid, name, appId,access_token) {
     this.uid = uid;
     this.appId = appId;
     this.userName = name;
@@ -31,8 +31,7 @@ class agoraFuntionality {
     await this.client
       .login({ uid, token: this.token })
       .then(async() => {
-        let auth=await getAuthToken()
-        let data=await getChatData(auth.token,auth.uid)
+        let data=await getChatData(access_token,uid)
         console.log(data.data.data)
         this.peerMessageRecive();
         this.RemoteInvitationReceived();
@@ -50,8 +49,8 @@ class agoraFuntionality {
         console.log(err);
       });
   }
-  init(uid, name, appId) {
-    this.login(uid, name, appId);
+  init(uid, name, appId,access_token) {
+    this.login(uid, name, appId,access_token);
   }
   async createAgoraRtmToken(userName) {
     try {
@@ -295,22 +294,22 @@ let reciveMessageStoreAndOutput=(message, peerId)=>{
 // **********************************************
 
 
-let getAuthToken=async()=>{
-  try {
-    const response = await axios.post(
-      `https://tradazine.com/api/v1/login?username=user4@gmail.com&password=123456`
-      // `https://tradazine.com/api/v1/login?username=hamidur@cems.com&password=123456`
-    );
-    let res={
-      token:response.data.access_token,
-      uid:response.data.chat_uid
-    }
-      return await res
-    // return await response.data.token;
-  } catch (error) {
-    console.error(error);
-  }
-}
+// let getAuthToken=async()=>{
+//   try {
+//     const response = await axios.post(
+//       `https://tradazine.com/api/v1/login?username=user4@gmail.com&password=123456`
+//       // `https://tradazine.com/api/v1/login?username=hamidur@cems.com&password=123456`
+//     );
+//     let res={
+//       token:response.data.access_token,
+//       uid:response.data.chat_uid
+//     }
+//       return await res
+//     // return await response.data.token;
+//   } catch (error) {
+//     console.error(error);
+//   }
+// }
 let getChatData=async(authToken,uid)=>{
   let id=uid.split("-")[1]
   try {

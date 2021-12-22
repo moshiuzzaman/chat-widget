@@ -118,6 +118,7 @@ let createMessageOutput = (message) => {
   document.getElementById("cems__chatbox__messages").appendChild(createMessageOutput);
 };
 let sendMessage = async (id, message = null) => {
+  
   if (message === null) {
     typeMessage = document.getElementById("cems__input__message").value;
     message={
@@ -125,6 +126,7 @@ let sendMessage = async (id, message = null) => {
       type:'text'
     }
   }
+  console.log(message)
   if (message.text.length === 0) {
     alert("write something");
   } else {

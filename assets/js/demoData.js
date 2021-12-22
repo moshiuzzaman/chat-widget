@@ -77,6 +77,7 @@ allMessage.map(am=>{
   if(strStart==="[" && strEnd==="]"){
     let parseAm=JSON.parse(am.text)
     parseAm.map(d=>{
+      console.log(d)
       let isa=true
       testd.map(td=>{
         if(d.uid===td.uid){
@@ -136,8 +137,8 @@ let addchangeUser=(uid)=>{
     chatListData=withoutData
     if (alData === undefined) {
       chatListData.unshift({
-        name: "shozon raj",
-        uid: "difs-238",
+        name: "User3",
+        uid: "vexpo-243",
         messages: [],
       });
     }

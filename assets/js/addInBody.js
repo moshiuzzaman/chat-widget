@@ -1,4 +1,6 @@
-document.getElementsByTagName("BODY")[0].innerHTML += `  <div class="cems__container">
+
+document.getElementById('cems__root').innerHTML+=`
+<div class="cems__container">
 <div class="cems__chatbox">
   <div class="cems__chatbox__support ">
     <div id="cems__chatbox__chatlists">
@@ -55,12 +57,12 @@ document.getElementsByTagName("BODY")[0].innerHTML += `  <div class="cems__conta
       </div>
     </div>
   </div>
-  <div class="cems__chatbox__button">
+  <div class="cems__chatbox__button cems__hide__section" id="cems__chatbox__button">
     <button>button</button>
   </div>
  
-  <div id="log" class="cems__hide__section" ></div>
+
 </div>
+
 </div>
-   
-    `
+`

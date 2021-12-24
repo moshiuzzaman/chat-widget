@@ -1,3 +1,4 @@
+console.log('CB');
 class InteractiveChatbox {
   constructor(chatToggleButton,  chatbox, icons,  chatSection, chatList) {
     this.args = {
@@ -76,3 +77,28 @@ const chatbox = new InteractiveChatbox(
 );
 chatbox.display();
 chatbox.toggleIcon(false, chatToggleButton);
+
+
+appId = "9726a69c2bd448108598e9e5a3d7e0d4"
+      let getAuthToken=async(email,pass)=>{
+          try {
+            const response = await axios.post(
+              `https://tradazine.com/api/v1/login?username=user3@gmail.com&password=123456`
+              // `https://tradazine.com/api/v1/login?username=hamidur@cems.com&password=123456`
+            );
+            let res={
+              token:response.data.access_token,
+              uid:response.data.chat_uid,
+              name:response.data.name
+            }
+            allDetails.access_token=response.data.access_token
+              return await res
+          } catch (error) {
+            console.error(error);
+          }
+        }
+        let login=async()=>{
+          let authData= await getAuthToken()
+          await agoraFunction.init(authData.uid,authData.name,appId,authData.token)
+        }
+         login()

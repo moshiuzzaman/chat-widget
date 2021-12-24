@@ -77,6 +77,7 @@
       </div>
 
     </div>
+    <div id="cems__root"></div>
  <div id="cems__log"></div>
  <button id="cems__myBtn">Open Modal</button>
  <div id="cems__myModal" class="cems__modal">
@@ -92,8 +93,8 @@
          </div>
        </div>
    </div>
- 
- </div>
+
+
     <!-- <script src="./assets/js/addInBody.js"></script> -->
     <script src="./assets/js/libs/agora-rtm-sdk-1.4.3.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
@@ -101,37 +102,5 @@
     <script src="./assets/js/agora.js"></script>
     <script src="./assets/js/script.js"></script>
     <script src="./assets/js/Chatbox.js"></script>
-    <script>
-      appId = "9726a69c2bd448108598e9e5a3d7e0d4"
-      let getAuthToken=async(email,pass)=>{
-          try {
-            const response = await axios.post(
-              `https://tradazine.com/api/v1/login?username=user4@gmail.com&password=123456`
-              // `https://tradazine.com/api/v1/login?username=hamidur@cems.com&password=123456`
-            );
-            let res={
-              token:response.data.access_token,
-              uid:response.data.chat_uid,
-              name:response.data.name
-              
-            }
-              return await res
-            // return await response.data.token;
-          } catch (error) {
-            console.error(error);
-          }
-        }
-        let login=async()=>{
-          let authData= await getAuthToken()
-          await agoraFunction.init(authData.uid,authData.name,appId,authData.token)
-        }
-         login()
-    </script>
   </body>
 </html>
-
-
-    <!-- let name= "Raj",
-    uid= "difs-235" -->
-     <!-- uid='difs-238'
-      let name='shozon raj' -->

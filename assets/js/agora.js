@@ -31,26 +31,27 @@ class agoraFuntionality {
     await this.client
       .login({ uid, token: this.token })
       .then(async() => {
-        let data=await getChatData(access_token,uid)
-        console.log(data.data.data)
+        // let data=await getChatData(access_token,uid)
         this.peerMessageRecive();
         this.RemoteInvitationReceived();
         this.status = "online";
         allDetails.userName = name;
+        allDetails.userId=uid
         document
           .getElementById("cems__log")
           .appendChild(document.createElement("div"))
           .append("login as " + name + "id " + uid);
         document.getElementById("cems__chatbox__button").classList.remove("cems__hide__section");
-         fetchData(uid,data.data.data);
+         fetchData(uid);
         gotoChatList();
+        friendList=await getFriendListData(access_token,uid)
       })
       .catch((err) => {
         console.log(err);
       });
   }
   init(uid, name, appId,access_token) {
-    this.login(uid, name, appId,access_token);
+    this.login(uid.toString(), name, appId,access_token);
   }
   async createAgoraRtmToken(userName) {
     try {
@@ -63,12 +64,12 @@ class agoraFuntionality {
     }
   }
   async sendPeerMessage(message, peerId) {
-
+    
     scrollBottom();
-    if(message.type==='call'){
+    if(message.type=='call'){
       return
     }
-    await this.client.sendMessageToPeer({ text: message.text }, peerId).then((sendResult) => {
+    await this.client.sendMessageToPeer({ text: message.text }, peerId.toString()).then((sendResult) => {
       if (sendResult.hasPeerReceived) {
         document
           .getElementById("cems__log")
@@ -84,9 +85,8 @@ class agoraFuntionality {
   }
 
   peerMessageRecive() {
-    this.client.on("MessageFromPeer", function (message, peerId) {
-
-      let withOutUnreadMessageId=unreadMessageId.filter(id=>id!==peerId)
+    this.client.on("MessageFromPeer", function (message, peerId,proper) {
+      let withOutUnreadMessageId=unreadMessageId.filter(id=>id!=peerId)
       unreadMessageId=[...withOutUnreadMessageId,peerId]
       reciveMessageStoreAndOutput(message,peerId)
     });
@@ -94,15 +94,15 @@ class agoraFuntionality {
 
 
   audioCall = () => {
-    if (this.localInvitation !== null) {
+    if (this.localInvitation != null) {
       this.localInvitation.removeAllListeners();
       this.localInvitation = null;
     }
-    console.log(calleeId);
-    this.localInvitation = this.client.createLocalInvitation(calleeId);
+    this.localInvitation = this.client.createLocalInvitation(calleeId.toString());
 
     this.localInvitationEvents();
-    this.localInvitation._channelId = this.uid.replace(/ /g, "_") + calleeId.replace(/ /g, "_");
+    this.localInvitation._channelId = this.uid+ calleeId;
+    console.log(this.localInvitation._channelId);
     this.localInvitation._content = this.userName;
     this.localInvitation.send();
     this.sections.getModalSection.innerHTML = outgoinCallOutput();
@@ -144,11 +144,11 @@ class agoraFuntionality {
 
   RemoteInvitationReceived() {
     this.client.on("RemoteInvitationReceived", (remoteInvitation) => {
-      if (this.status !== "online") {
+      if (this.status != "online") {
         console.log("user offline");
         return;
       }
-      if (this.remoteInvitation !== null) {
+      if (this.remoteInvitation != null) {
         this.remoteInvitation.removeAllListeners();
         this.remoteInvitation = null;
       }
@@ -192,7 +192,6 @@ class agoraFuntionality {
 }
 
 let getModalSection = document.getElementById("cems__myModal");
-console.log(getModalSection);
 let agoraFunction = new agoraFuntionality(getModalSection);
 
 let cancelOutgoingCall = () => {
@@ -211,8 +210,8 @@ let createRecivedMessageOutput = (message, peerId) => {
   let className = peerId.replace(/ /g, "_");
   let isClass = document.getElementsByClassName(`cems__messageFor${className}`)[0];
 
-  if (isClass !== undefined) {
-    unreadMessageId=unreadMessageId.filter(uid=>uid!==peerId)
+  if (isClass != undefined) {
+    unreadMessageId=unreadMessageId.filter(uid=>uid!=peerId)
     isClass.appendChild(createMessageOutput);
   }
 };
@@ -252,35 +251,13 @@ let incomingCallOutput = (name) => {
 };
 
 let reciveMessageStoreAndOutput=(message, peerId)=>{
-  
-  let exactMessagesData = chatListData.find((d) => d.uid === peerId);
-  if (exactMessagesData === undefined) {
-    exactMessagesData = friendList.find((data) => data.uid === peerId);
-    exactMessagesData.messages = [
-      {
-        messageType: 3,
-        text: message.text,
-        timeStamp: null,
-        username: peerId,
-      },
-    ];
-    chatListData.unshift(exactMessagesData);
-    document.getElementById("cems__chatbox__messages").innerHTML = "";
+  let peerDetails=friendList.find(d=>d.id==peerId)
+console.log(peerDetails);
+  chatListDataStore(message,peerId,peerDetails.name,'recive')
+    
+    newChatListStore(message,peerId,peerDetails.name,'recive')
+
     createRecivedMessageOutput(message.text, peerId);
-  } else {
-    let withoutExactMessagesData = chatListData.filter((d) => d.uid !== peerId);
-    if (exactMessagesData.messages.length === 0) {
-      document.getElementById("cems__chatbox__messages").innerHTML = "";
-    }
-    exactMessagesData.messages.push({
-      messageType: 3,
-      text: message.text,
-      timeStamp: null,
-      username: peerId,
-    });
-    chatListData = [exactMessagesData, ...withoutExactMessagesData];
-    createRecivedMessageOutput(message.text, peerId);
-  }
   scrollBottom();
   gotoChatList();
   var chatEl = document.getElementById("cems__chatbox__messages");
@@ -291,29 +268,10 @@ let reciveMessageStoreAndOutput=(message, peerId)=>{
     .append("Message from: " + peerId.replace(/ /g, "_") + " Message: " + message.text);
 }
 
-// **********************************************
 
-
-// let getAuthToken=async()=>{
-//   try {
-//     const response = await axios.post(
-//       `https://tradazine.com/api/v1/login?username=user4@gmail.com&password=123456`
-//       // `https://tradazine.com/api/v1/login?username=hamidur@cems.com&password=123456`
-//     );
-//     let res={
-//       token:response.data.access_token,
-//       uid:response.data.chat_uid
-//     }
-//       return await res
-//     // return await response.data.token;
-//   } catch (error) {
-//     console.error(error);
-//   }
-// }
 let getChatData=async(authToken,uid)=>{
-  let id=uid.split("-")[1]
   try {
-    let response=await axios.get(`https://tradazine.com/api/v1/all-chat-message/${id}`,{
+    let response=await axios.get(`https://tradazine.com/api/v1/all-chat-message/${uid}`,{
       headers: {'Authorization': `Bearer ${authToken}`}
     })
     return await response
@@ -321,6 +279,16 @@ let getChatData=async(authToken,uid)=>{
     console.error(err)
   }
 }
-
+let getFriendListData=async(authToken,uid)=>{
+  try {
+    let response=await axios.get(`https://tradazine.com/api/v1/get-all-users`,{
+      headers: {'Authorization': `Bearer ${authToken}`}
+    })
+    let friendlist=await response.data.data.filter(d=>d.id!=uid)
+    return await friendlist
+  } catch(err){
+    console.error(err)
+  }
+}
 
 const log = console.log.bind(console);

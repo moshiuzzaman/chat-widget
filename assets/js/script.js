@@ -9,7 +9,7 @@ let scrollBottom = () => {
 };
 let usersToggle = (data) => {
   let element = `
-    <div class="cems__chat__list" id='${data.uid}' onclick={showMesseges(this.id)}>
+    <div class="cems__chat__list" id='${data.id}' onclick={showMesseges(this.id)}>
     <div class="cems__friend__icon">
       <p>${data.name.charAt(0)}</p>
     </div>
@@ -24,21 +24,21 @@ let chatsToggle = (data) => {
   let lastMessageDetails=data.messages.pop()
   
   let lastMessage=''
-  if (lastMessageDetails!==undefined){
+  if (lastMessageDetails!=undefined){
     data.messages.push(lastMessageDetails)
-    if(lastMessageDetails.messageType===2){
+    if(lastMessageDetails.messageType==2){
       lastMessage= `You : ${lastMessageDetails.text}`
     }else{
       lastMessage=  lastMessageDetails.text
     }
   }
-  let isUnread=unreadMessageId.find(id=>id===data.uid)
+  let isUnread=unreadMessageId.find(id=>id==data.id)
   let setclass=''
-  if(isUnread!==undefined){
+  if(isUnread!=undefined){
     setclass='unseen__message'
   }
   let element = `
-    <div class="cems__chat__list ${setclass}" id='${data.uid}' onclick={showMesseges(this.id)}>
+    <div class="cems__chat__list ${setclass}" id='${data.id}' onclick={showMesseges(this.id)}>
     <div class="cems__friend__icon">
       <p>${data.name.toUpperCase().charAt(0)}</p>
     </div>
@@ -51,9 +51,10 @@ let chatsToggle = (data) => {
   return (chatListsDiv.innerHTML += element);
 };
 let gotoChatList = () => {
-  let className = calleeId.replace(/ /g, "_");
+  console.log(chatListData,newChatList);
+  let className = calleeId;
   let isClass = document.getElementsByClassName(`cems__messageFor${className}`)[0];
-  if (isClass !== undefined) {
+  if (isClass != undefined) {
     isClass.classList.remove(`cems__messageFor${className}`)
   }
   chatListsDiv.innerHTML = "";
@@ -78,13 +79,15 @@ let gotoUsers = () => {
   }
 };
 function showMesseges(id) {
-  let exactData = chatListData.find((data) => data.uid === id);
-  if (exactData === undefined) {
-    exactData = friendList.find((data) => data.uid === id);
+  let exactData = chatListData.find((data) => data.id == id);
+  console.log(exactData);
+  if (exactData == undefined) {
+    exactData = friendList.find((data) => data.id == id);
+
     exactData.messages = [];
   }
-  calleeId = exactData.uid;
-  unreadMessageId=unreadMessageId.filter(uid=>uid!==exactData.uid)
+  calleeId = exactData.id;
+  unreadMessageId=unreadMessageId.filter(id=>id!=exactData.id)
   calleeName = exactData.name;
   chatboxChattingDiv.innerHTML = chatboxChating(exactData);
   chatbox.gotoChat();
@@ -102,7 +105,7 @@ let controlSentOrReciveMessage = (data) => {
   chatboxMessages.innerHTML = "";
 
   data.messages.map((m) => {
-    if (m.messageType === 2) {
+    if (m.messageType == 2) {
       chatboxMessages.innerHTML += `<div class="cems__messages__item cems__messages__item--operator">${m.text}</div>`;
     } else {
       chatboxMessages.innerHTML += `<div class="cems__messages__item cems__messages__item--visitor">${m.text}</div>`;
@@ -119,52 +122,101 @@ let createMessageOutput = (message) => {
 };
 let sendMessage = async (id, message = null) => {
   
-  if (message === null) {
+  if (message == null) {
     typeMessage = document.getElementById("cems__input__message").value;
     message={
       text:typeMessage,
-      type:'text'
+      type:'TEXT'
     }
   }
   console.log(message)
-  if (message.text.length === 0) {
+  if (message.text.length == 0) {
     alert("write something");
   } else {
     document.getElementById("cems__input__message").value = "";
-    let exactMessagesData = chatListData.find((d) => d.uid === id);
-    if (exactMessagesData === undefined) {
-      exactMessagesData = friendList.find((data) => data.uid === id);
+    let exactMessagesData=chatListDataStore(message,id,allDetails.userName,'sent')
+    
+    newChatListStore(message,id,allDetails.userName,'sent')
+    
+    createMessageOutput(message.text);
+    var chatEl = document.getElementById("cems__chatbox__messages");
+    chatEl.scrollTop = chatEl.scrollHeight;
+    await agoraFunction.sendPeerMessage(message, exactMessagesData.id);
+  }
+};
+
+let chatListDataStore=(message,id,name,type)=>{
+  let messageType
+  if(type=='sent'){
+    messageType=2
+  }else{
+    messageType=3
+  }
+  
+
+  let exactMessagesData=chatListData.find((d=>d.id==id));
+    if (exactMessagesData == undefined) {
+      exactMessagesData = friendList.find((data) => data.id == id);
       exactMessagesData.messages = [
         {
-          messageType: 2,
+          messageType: messageType,
           text: message.text,
           timeStamp: null,
-          username: allDetails.userName,
+          username: name,
         },
       ];
       chatListData.unshift(exactMessagesData);
       document.getElementById("cems__chatbox__messages").innerHTML = "";
-      createMessageOutput(message.text);
     } else {
-      let withoutExactMessagesData = chatListData.filter((d) => d.uid !== id);
-      if (exactMessagesData.messages.length === 0) {
+      let withoutExactMessagesData = chatListData.filter((d) => d.id != id);
+      if (exactMessagesData.messages.length == 0) {
         document.getElementById("cems__chatbox__messages").innerHTML = "";
       }
       exactMessagesData.messages.push({
-        messageType: 2,
+        messageType: messageType,
         text: message.text,
         timeStamp: null,
-        username: allDetails.userName,
+        username: name,
       });
-      chatListData = [exactMessagesData, ...withoutExactMessagesData];
-      createMessageOutput(message.text);
+      chatListData=[exactMessagesData,...withoutExactMessagesData]
     }
-    var chatEl = document.getElementById("cems__chatbox__messages");
-    chatEl.scrollTop = chatEl.scrollHeight;
-    await agoraFunction.sendPeerMessage(message, exactMessagesData.uid);
+    return exactMessagesData
+}
+let newChatListStore=(message,id,name,type)=>{
+  let messageType
+  if(type=='sent'){
+    messageType=2
+  }else{
+    messageType=3
   }
-};
-
+  
+ let exactMessagesData=newChatList.find((d=>d.id==id));
+    if (exactMessagesData == undefined) {
+      exactMessagesData = friendList.find((data) => data.id == id);
+      exactMessagesData.messages = [
+        {
+          messageType: messageType,
+          text: message.text,
+          timeStamp: null,
+          username: name,
+        },
+      ];
+      newChatList.unshift(exactMessagesData);
+      
+    } else {
+        
+      let withoutExactMessagesData = newChatList.filter((d) => d.id != id);
+    
+      // exactMessagesData.messages.push({
+      //   messageType: 2,
+      //   text: message.text,
+      //   timeStamp: null,
+      //   username: allDetails.userName,
+      // });
+     
+      newChatList=[exactMessagesData,...withoutExactMessagesData]
+    }
+}
 let chatboxChating = (data) => {
   return `
   <div class="cems__chatbox__header">
@@ -184,7 +236,7 @@ let chatboxChating = (data) => {
   <img src="./images/icons/videocall.svg" alt="" />
   </div>
 </div>
-<div id="cems__chatbox__messages" class="cems__messageFor${data.uid.replace(/ /g, "_")}">
+<div id="cems__chatbox__messages" class="cems__messageFor${data.id}">
   ${
     !data.messages.length
       ? `<p class="cems__no_found">No message found</p>`
@@ -194,7 +246,7 @@ let chatboxChating = (data) => {
 <div class="cems__chatbox__footer">
   <img src="./images/icons/attachment.svg" alt="" />
   <input id="cems__input__message" type="text" placeholder="Write a message..." />
-  <button class="cems__chatbox__send--footer" onclick=sendMessage('${data.uid}')>Send</button>
+  <button class="cems__chatbox__send--footer" onclick=sendMessage('${data.id}')>Send</button>
 </div>
   `;
 };
@@ -208,6 +260,4 @@ var btn = document.getElementById("cems__myBtn");
 // Get the <span> element that closes the modal
 
 // When the user clicks the button, open the modal
-btn.onclick = function () {
-  modal.style.display = "flex";
-};
+

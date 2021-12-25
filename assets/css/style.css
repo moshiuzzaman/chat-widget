@@ -312,3 +312,18 @@ div#cems__call__content h3 {
 .cems__callImage img {
   width: 100%;
 }
+/* **********reciveCall************* */
+div#cems__call__sender {
+  position: absolute;
+  width: 19%;
+  height: 16%;
+  background: red;
+  top: 2%;
+  right: 2%;
+}
+div#cems__call__reciver {
+  width: 100%;
+  height: 100%;
+  background: rgb(255, 255, 255);
+  border-radius: 20px;
+}

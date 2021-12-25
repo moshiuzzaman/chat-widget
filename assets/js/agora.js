@@ -240,6 +240,7 @@ class agoraFuntionality {
           // Leave the channe.
           await this.rtc.client.leave();
           this.sections.getModalSection.style.display = "none";
+          this.status='online'
     });
   });
  }
@@ -259,6 +260,7 @@ class agoraFuntionality {
       // Leave the channel.
       await this.rtc.client.leave();
       this.sections.getModalSection.style.display = "none";
+      this.status='online'
     };
 
 }

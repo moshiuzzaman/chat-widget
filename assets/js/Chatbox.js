@@ -83,7 +83,7 @@ appId = "9726a69c2bd448108598e9e5a3d7e0d4"
       let getAuthToken=async(email,pass)=>{
           try {
             const response = await axios.post(
-              `https://tradazine.com/api/v1/login?username=user4@gmail.com&password=123456`
+              `https://tradazine.com/api/v1/login?username=user3@gmail.com&password=123456`
               // `https://tradazine.com/api/v1/login?username=hamidur@cems.com&password=123456`
             );
             let res={

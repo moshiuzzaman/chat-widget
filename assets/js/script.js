@@ -32,7 +32,9 @@ let chatsToggle = (data) => {
       lastMessage=  lastMessageDetails.text
     }
   }
+  
   let isUnread=unreadMessageId.find(id=>id==data.id)
+  console.log(isUnread)
   let setclass=''
   if(isUnread!=undefined){
     setclass='unseen__message'
@@ -51,12 +53,7 @@ let chatsToggle = (data) => {
   return (chatListsDiv.innerHTML += element);
 };
 let gotoChatList = () => {
-  console.log(chatListData,newChatList);
   let className = calleeId;
-  let isClass = document.getElementsByClassName(`cems__messageFor${className}`)[0];
-  if (isClass != undefined) {
-    isClass.classList.remove(`cems__messageFor${className}`)
-  }
   chatListsDiv.innerHTML = "";
   chatlistHeaderText.innerText = "Chats";
   if (chatListData.length < 1) {
@@ -79,6 +76,7 @@ let gotoUsers = () => {
   }
 };
 function showMesseges(id) {
+  inMessages=true
   let exactData = chatListData.find((data) => data.id == id);
   console.log(exactData);
   if (exactData == undefined) {
@@ -95,6 +93,7 @@ function showMesseges(id) {
 }
 
 let backToChatList = () => {
+  inMessages=false
   gotoChatList();
   chatbox.backTochatList();
 };
@@ -232,8 +231,8 @@ let chatboxChating = (data) => {
     </div>
   </div>
   <div class="cems__chat__callicon">
-  <img src="./images/icons/callIcon.svg" alt="" / onclick=agoraFunction.audioCall()>
-  <img src="./images/icons/videocall.svg" alt="" />
+  <img src="./images/icons/callIcon.svg" alt="" / onclick=agoraFunction.audioVideoCall('audio')>
+  <img src="./images/icons/videocall.svg" alt="" /onclick=agoraFunction.audioVideoCall('video')>
   </div>
 </div>
 <div id="cems__chatbox__messages" class="cems__messageFor${data.id}">
@@ -245,7 +244,7 @@ let chatboxChating = (data) => {
 </div>
 <div class="cems__chatbox__footer">
   <img src="./images/icons/attachment.svg" alt="" />
-  <input id="cems__input__message" type="text" placeholder="Write a message..." />
+  <input id="cems__input__message" type="text" placeholder="Write a message..." autocomplete="off"/>
   <button class="cems__chatbox__send--footer" onclick=sendMessage('${data.id}')>Send</button>
 </div>
   `;

@@ -52,7 +52,7 @@ class agoraFuntionality {
          fetchData(uid);
         gotoChatList();
         friendList=await getFriendListData(access_token,uid)
-        this.joinReciveCallReciver()
+        
       })
       .catch((err) => {
         console.log(err);
@@ -106,12 +106,13 @@ class agoraFuntionality {
     this.rtmClient.on("MessageFromPeer", function (message, peerId,proper) {
       let withOutUnreadMessageId=unreadMessageId.filter(id=>id!=peerId)
       unreadMessageId=[...withOutUnreadMessageId,peerId]
+      console.log(unreadMessageId)
       reciveMessageStoreAndOutput(message,peerId)
     });
   }
 
 
-   audioCall = async() => {
+  audioVideoCall = async(type) => {
     if (this.localInvitation != null) {
       this.localInvitation.removeAllListeners();
       this.localInvitation = null;
@@ -121,17 +122,20 @@ class agoraFuntionality {
     this.localInvitationEvents();
     this.channelId=this.uid+ calleeId;
     this.localInvitation._channelId = this.uid+ calleeId;
-    console.log(this.localInvitation._channelId);
-    this.localInvitation._content = this.userName;
+    this.localInvitation._content = {
+      name:this.userName,
+      type:type
+    }
+    this.calltype=type
     this.localInvitation.send();
-    this.sections.getModalSection.innerHTML = outgoinCallOutput();
+    this.sections.getModalSection.innerHTML = outgoinCallOutput(type);
     this.sections.getCallingType = document.getElementById("callingType");
     this.status = "busy";
     this.sections.getModalSection.style.display = "flex";
-    sendMessage(calleeId,{text:`You called ${calleeName}`,type:'call'})
+    sendMessage(calleeId,{text:`You gave ${calleeName} a ${type} call `,type:'call'})
     this.rtcToken=await this.createAgoraRtcToken()
     console.log(this.rtcToken)
-    
+    this.joinReciveCallReciver(type)
   };
 
 
@@ -143,8 +147,8 @@ class agoraFuntionality {
       this.sections.getCallingType.innerHTML = `Calling ${calleeName}`;
     });
     this.localInvitation.on("LocalInvitationAccepted", (r) => {
-      this.joinReciveCallSender()
-      recivedCallOutput()
+      this.joinReciveCallSender(this.localInvitation._content.type)
+      recivedCallOutput(this.localInvitation._content.type)
     });
 
     this.localInvitation.on("LocalInvitationCanceled", (r) => {
@@ -169,24 +173,26 @@ class agoraFuntionality {
     this.rtmClient.on("RemoteInvitationReceived", async(remoteInvitation) => {
       if (this.status != "online") {
         console.log("user offline");
+        remoteInvitation.refuse();
         return;
       }
       if (this.remoteInvitation != null) {
         this.remoteInvitation.removeAllListeners();
         this.remoteInvitation = null;
       }
-
       this.remoteInvitation = remoteInvitation;
       this.channelId=remoteInvitation._channelId
       this.rtcToken=await this.createAgoraRtcToken()
-      console.log(this.rtcToken)
-      incomingCallOutput(remoteInvitation._content);
+      incomingCallOutput(remoteInvitation._content.name,remoteInvitation._content.type);
+      this.calltype=remoteInvitation._content.type
       this.sections.getCallingType = document.getElementById("callingType");
       this.status = "busy";
       this.sections.getModalSection.style.display = "flex";
       this.peerEvents();
-      reciveMessageStoreAndOutput({text:`${remoteInvitation._content} called You`,type:'call'},remoteInvitation.callerId)
+      reciveMessageStoreAndOutput({text:`${remoteInvitation._content.name} called You`,type:'call'},remoteInvitation.callerId)
+      this.joinReciveCallReciver(remoteInvitation._content.type)
     });
+    
   }
 
   peerEvents = () => {
@@ -194,11 +200,11 @@ class agoraFuntionality {
       console.log("RemoteInvitationReceived" + r);
     });
     this.remoteInvitation.on("RemoteInvitationAccepted", (r) => {
-      this.joinReciveCallSender()
-      recivedCallOutput()
+      this.joinReciveCallSender(this.remoteInvitation._content.type)
+      recivedCallOutput(this.remoteInvitation._content.type)
     });
     this.remoteInvitation.on("RemoteInvitationCanceled", (r) => {
-      this.hidecall(`${this.remoteInvitation._content} canceled the call`)
+      this.hidecall(`${this.remoteInvitation._content.name} canceled the call`)
     });
     this.remoteInvitation.on("RemoteInvitationRefused", (r) => {
       console.log('RemoteInvitationRefused ' +r)
@@ -219,24 +225,28 @@ class agoraFuntionality {
 // **********audio video *************
 
 
- async joinReciveCallReciver(){
+ async joinReciveCallReciver(type){
   this.rtc.client = AgoraRTC.createClient({ mode: "rtc", codec: "vp8" });
   this.rtc.client.on("user-published", async (user, mediaType) => {
     await this.rtc.client.subscribe(user, mediaType);
     console.log("subscribe success");
-    if (mediaType === "video") {
+    if(type=='video'){
+      if (mediaType === "video") {
       const remoteVideoTrack = user.videoTrack;
       const fricon = document.getElementById("cems__call__reciver");
       remoteVideoTrack.play(fricon);
     }
+    }
+    
     if (mediaType === "audio") {
       const remoteAudioTrack = user.audioTrack;
       remoteAudioTrack.play();
     }
     this.rtc.client.on("user-unpublished", async(user) => {
-        console.log('object')
           this.rtc.localAudioTrack.close();
+         if(type=='video'){ 
           this.rtc.localVideoTrack.close();
+         }
           // Leave the channe.
           await this.rtc.client.leave();
           this.sections.getModalSection.style.display = "none";
@@ -244,24 +254,31 @@ class agoraFuntionality {
     });
   });
  }
- async joinReciveCallSender (){
+ async joinReciveCallSender (type){
    console.log(this.appId, this.channelId,this.rtcToken, this.uid)
       await this.rtc.client.join(this.appId, this.channelId,this.rtcToken, this.uid);
       this.rtc.localAudioTrack = await AgoraRTC.createMicrophoneAudioTrack();
-      this.rtc.localVideoTrack = await AgoraRTC.createCameraVideoTrack();
+      if(type=='video'){
+        this.rtc.localVideoTrack = await AgoraRTC.createCameraVideoTrack();
       await this.rtc.client.publish([this.rtc.localAudioTrack, this.rtc.localVideoTrack]);
       const mycon = document.getElementById("cems__call__sender");
       this.rtc.localVideoTrack.play(mycon);
+      }else{
+        await this.rtc.client.publish([this.rtc.localAudioTrack]);
+      }
+      
       console.log("publish success!");
     };
  async leaveReciveCall(){
-      this.rtc.localAudioTrack.close();
+   if(this.calltype=="video"){
       this.rtc.localVideoTrack.close();
+   }
+      this.rtc.localAudioTrack.close();
       // Leave the channel.
       await this.rtc.client.leave();
       this.sections.getModalSection.style.display = "none";
       this.status='online'
-    };
+    };0
 
 }
 
@@ -285,48 +302,72 @@ let createRecivedMessageOutput = (message, peerId) => {
   let createMessageOutput = document.createElement("div");
   createMessageOutput.className = "cems__messages__item cems__messages__item--visitor";
   createMessageOutput.innerHTML = `${message}`;
-  let className = peerId.replace(/ /g, "_");
+  let className = peerId;
   let isClass = document.getElementsByClassName(`cems__messageFor${className}`)[0];
-
+if(inMessages==true){
   if (isClass != undefined) {
     unreadMessageId=unreadMessageId.filter(uid=>uid!=peerId)
     isClass.appendChild(createMessageOutput);
   }
+}
+  
 };
 
-let recivedCallOutput=()=>{
+let recivedCallOutput=(type)=>{
+  console.log(calleeName)
   let output = `
   <div id="cems__callsection">
-       <div id="cems__call__content">
-       <div id="cems__call__sender"></div>
-         <div id="cems__call__reciver"></div>
+       
+       ${
+         type=='video' ? `<div id="cems__recivedcall__content">
+         <div id="cems__call__sender"></div>
+         <div id="cems__call__reciver"></div>` 
+         :
+         `<div id="cems__call__content">
+         <div  class="cems__callImage" >
+           <img class="cems__callImage" src="https://img.icons8.com/ios/50/000000/user-male-circle.png"/>
+         <h4 id='callingType'> talking with ${calleeName} </h4>
+       </div>
+         ` 
+       }
+         <div id="cams__call__timer"><span id="minutes"></span>:<span id="seconds"></span></div>
          <div class="cems__callButtons" >
-           <button id="recivedCallCancle" onclick=cancelRecivedCall()>Cancle</button>
+         <img src="../../images/icons/callred.svg" alt="" class="cems__cancleBtn"  id="recivedCallCancle" onclick=cancelRecivedCall()>
          </div>
          
        </div>
    </div>
   `;
   getModalSection.innerHTML = output;
+  var sec = 0;
+  function pad ( val ) { return val > 9 ? val : "0" + val; }
+  setInterval( function(){
+      document.getElementById("seconds").innerHTML=pad(++sec%60);
+      document.getElementById("minutes").innerHTML=pad(parseInt(sec/60,10));
+  }, 1000);
 }
 
-let outgoinCallOutput = () => {
+let outgoinCallOutput = (type) => {
   return `
   <div id="cems__callsection">
        <div id="cems__call__content">
          <h3 class="cems__calltype">Outgoing Call</h3>
          <div  class="cems__callImage" >
            <img class="cems__callImage" src="https://img.icons8.com/ios/50/000000/user-male-circle.png"/>
-         <h4 id='callingType'>Call ${calleeName} </h4>
+         <h4 id='callingType'> Call ${calleeName} </h4>
          <div class="cems__callButtons" >
-           <button class="cems__cancleBtn" onclick=cancelOutgoingCall()>Cancle</button>
+           <img src="../../images/icons/callred.svg" alt="" class="cems__cancleBtn" onclick=cancelOutgoingCall()>
+
          </div>
        </div>
    </div>
   `;
 };
 
-let incomingCallOutput = (name) => {
+
+
+let incomingCallOutput = (name,type) => {
+  calleeName=name
   let output = `
   <div id="cems__callsection">
        <div id="cems__call__content">
@@ -335,8 +376,12 @@ let incomingCallOutput = (name) => {
            <img class="cems__callImage" src="https://img.icons8.com/ios/50/000000/user-male-circle.png"/>
          <h4 id='callingType'>Call from ${name} </h4>
          <div class="cems__callButtons">
-           <button class="cems__cancleBtn" onclick=cancelIncoingCall()>Cancle</button>
-           <button class="cems__reciveBtn" onclick=reciveIncomingCall()>Recive</button>
+           <img src="../../images/icons/callred.svg" alt="" class="cems__cancleBtn" onclick=cancelIncoingCall()>
+           ${
+            type==='audio' ? `<img src="../../images/icons/callgreen.svg" alt="" class="cems__reciveBtn" onclick=reciveIncomingCall()>`
+            : `<img src="../../images/icons/videocallgreen.svg" alt="" class="cems__reciveBtn" onclick=reciveIncomingCall()>`
+           }
+           
          </div>
        </div>
    </div>
@@ -346,12 +391,10 @@ let incomingCallOutput = (name) => {
 
 let reciveMessageStoreAndOutput=(message, peerId)=>{
   let peerDetails=friendList.find(d=>d.id==peerId)
-console.log(peerDetails);
   chatListDataStore(message,peerId,peerDetails.name,'recive')
     
-    newChatListStore(message,peerId,peerDetails.name,'recive')
-
-    createRecivedMessageOutput(message.text, peerId);
+  newChatListStore(message,peerId,peerDetails.name,'recive')
+  createRecivedMessageOutput(message.text, peerId);
   scrollBottom();
   gotoChatList();
   var chatEl = document.getElementById("cems__chatbox__messages");

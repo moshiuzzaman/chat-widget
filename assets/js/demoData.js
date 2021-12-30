@@ -2,6 +2,7 @@
 let calleeId='s'
 let calleeName=''
 let unreadMessageId=[]
+let inMessages=false
 let options = {
   channel: "143142",
   uid: 143,

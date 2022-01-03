@@ -9,6 +9,7 @@ class agoraFuntionality {
       localVideoTrack: null,
       client: null,
     };
+    this.mute=false
     this.uid = "";
     this.userName = "";
     this.appId = "";
@@ -243,6 +244,7 @@ class agoraFuntionality {
       remoteAudioTrack.play();
     }
     this.rtc.client.on("user-unpublished", async(user) => {
+      
           this.rtc.localAudioTrack.close();
          if(type=='video'){ 
           this.rtc.localVideoTrack.close();
@@ -251,6 +253,8 @@ class agoraFuntionality {
           await this.rtc.client.leave();
           this.sections.getModalSection.style.display = "none";
           this.status='online'
+          clearInterval(callInterval)
+          mute=false
     });
   });
  }
@@ -269,6 +273,14 @@ class agoraFuntionality {
       
       console.log("publish success!");
     };
+
+    muteAudio(){
+      this.rtc.localAudioTrack.close();
+    }
+   async  unmuteAudio(){
+      this.rtc.localAudioTrack = await AgoraRTC.createMicrophoneAudioTrack()
+      await this.rtc.client.publish([this.rtc.localAudioTrack]);
+    }
  async leaveReciveCall(){
    if(this.calltype=="video"){
       this.rtc.localVideoTrack.close();
@@ -278,7 +290,9 @@ class agoraFuntionality {
       await this.rtc.client.leave();
       this.sections.getModalSection.style.display = "none";
       this.status='online'
-    };0
+    clearInterval(callInterval)
+    mute=false
+    };
 
 }
 
@@ -312,9 +326,21 @@ if(inMessages==true){
 }
   
 };
-
+let mute=false
+  let mutecontrol=()=>{
+    let getMuteButton=document.getElementById('muteMicrophone')
+    if(mute!==false){
+      agoraFunction.unmuteAudio()
+      getMuteButton.innerHTML=`<img src="${cmsdir}/images/icons/microphone.svg" alt="" class="cems__cancleBtn"   onclick=mutecontrol()>`
+    }else{
+      agoraFunction.muteAudio()
+      getMuteButton.innerHTML=`<img src="${cmsdir}/images/icons/muteMicrophone.svg" alt="" class="cems__cancleBtn"   onclick=mutecontrol()>`
+    }
+    console.log(mute)
+    mute=!mute
+  }
 let recivedCallOutput=(type)=>{
-  console.log(calleeName)
+  console.log('mute'+mute)
   let output = `
   <div id="cems__callsection">
        
@@ -332,21 +358,26 @@ let recivedCallOutput=(type)=>{
        }
          <div id="cams__call__timer"><span id="minutes"></span>:<span id="seconds"></span></div>
          <div class="cems__callButtons" >
-         <img src="../../images/icons/callred.svg" alt="" class="cems__cancleBtn"  id="recivedCallCancle" onclick=cancelRecivedCall()>
+        <span id="muteMicrophone"><img src="${cmsdir}/images/icons/microphone.svg" alt="" class="cems__cancleBtn"   onclick=mutecontrol()></span>
+         
+         <img src="${cmsdir}/images/icons/callred.svg" alt="" class="cems__cancleBtn"  id="recivedCallCancle" onclick=cancelRecivedCall()>
          </div>
          
        </div>
    </div>
   `;
   getModalSection.innerHTML = output;
+  callTimer()
+}
+let callInterval
+let callTimer=()=>{
   var sec = 0;
   function pad ( val ) { return val > 9 ? val : "0" + val; }
-  setInterval( function(){
+  callInterval=setInterval( function(){
       document.getElementById("seconds").innerHTML=pad(++sec%60);
       document.getElementById("minutes").innerHTML=pad(parseInt(sec/60,10));
   }, 1000);
 }
-
 let outgoinCallOutput = (type) => {
   return `
   <div id="cems__callsection">
@@ -356,7 +387,7 @@ let outgoinCallOutput = (type) => {
            <img class="cems__callImage" src="https://img.icons8.com/ios/50/000000/user-male-circle.png"/>
          <h4 id='callingType'> Call ${calleeName} </h4>
          <div class="cems__callButtons" >
-           <img src="../../images/icons/callred.svg" alt="" class="cems__cancleBtn" onclick=cancelOutgoingCall()>
+           <img src="${cmsdir}/images/icons/callred.svg" alt="" class="cems__cancleBtn" onclick=cancelOutgoingCall()>
 
          </div>
        </div>
@@ -376,10 +407,10 @@ let incomingCallOutput = (name,type) => {
            <img class="cems__callImage" src="https://img.icons8.com/ios/50/000000/user-male-circle.png"/>
          <h4 id='callingType'>Call from ${name} </h4>
          <div class="cems__callButtons">
-           <img src="../../images/icons/callred.svg" alt="" class="cems__cancleBtn" onclick=cancelIncoingCall()>
+           <img src="${cmsdir}/images/icons/callred.svg" alt="" class="cems__cancleBtn" onclick=cancelIncoingCall()>
            ${
-            type==='audio' ? `<img src="../../images/icons/callgreen.svg" alt="" class="cems__reciveBtn" onclick=reciveIncomingCall()>`
-            : `<img src="../../images/icons/videocallgreen.svg" alt="" class="cems__reciveBtn" onclick=reciveIncomingCall()>`
+            type==='audio' ? `<img src="${cmsdir}/images/icons/callgreen.svg" alt="" class="cems__reciveBtn" onclick=reciveIncomingCall()>`
+            : `<img src="${cmsdir}/images/icons/videocallgreen.svg" alt="" class="cems__reciveBtn" onclick=reciveIncomingCall()>`
            }
            
          </div>
@@ -429,3 +460,6 @@ let getFriendListData=async(authToken,uid)=>{
 }
 
 const log = console.log.bind(console);
+if(cmsdir==='/'){
+  cmsdir='../../'
+}

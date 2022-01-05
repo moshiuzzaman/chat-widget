@@ -21,23 +21,30 @@ let usersToggle = (data) => {
   return (chatListsDiv.innerHTML += element);
 };
 let chatsToggle = (data) => {
-  let lastMessageDetails=data.messages.pop()
-  
-  let lastMessage=''
-  if (lastMessageDetails!=undefined){
-    data.messages.push(lastMessageDetails)
-    if(lastMessageDetails.messageType==2){
-      lastMessage= `You : ${lastMessageDetails.text}`
-    }else{
-      lastMessage=  lastMessageDetails.text
-    }
+  let lastMessageDetails = data.messages.pop();
+
+  let lastMessage = "";
+  if (lastMessageDetails != undefined) {
+    data.messages.push(lastMessageDetails);
+    if (lastMessageDetails.messageType == 2) {
+      if (lastMessageDetails.text.substring(0, 27) === "FiLe-https://tradazine.com/") {
+        lastMessage = `You : Send a file`;
+      }else{
+        lastMessage = `You : ${lastMessageDetails.text}`;
+      }
+    } else {
+      if (lastMessageDetails.text.substring(0, 27) === "FiLe-https://tradazine.com/") {
+        lastMessage = ` Send a file`;
+      }else{
+      lastMessage = lastMessageDetails.text;
+    }}
   }
-  
-  let isUnread=unreadMessageId.find(id=>id==data.id)
-  console.log(isUnread)
-  let setclass=''
-  if(isUnread!=undefined){
-    setclass='unseen__message'
+
+  let isUnread = unreadMessageId.find((id) => id == data.id);
+  console.log(isUnread);
+  let setclass = "";
+  if (isUnread != undefined) {
+    setclass = "unseen__message";
   }
   let element = `
     <div class="cems__chat__list ${setclass}" id='${data.id}' onclick={showMesseges(this.id)}>
@@ -76,7 +83,7 @@ let gotoUsers = () => {
   }
 };
 function showMesseges(id) {
-  inMessages=true
+  inMessages = true;
   let exactData = chatListData.find((data) => data.id == id);
   console.log(exactData);
   if (exactData == undefined) {
@@ -85,15 +92,16 @@ function showMesseges(id) {
     exactData.messages = [];
   }
   calleeId = exactData.id;
-  unreadMessageId=unreadMessageId.filter(id=>id!=exactData.id)
+  unreadMessageId = unreadMessageId.filter((id) => id != exactData.id);
   calleeName = exactData.name;
   chatboxChattingDiv.innerHTML = chatboxChating(exactData);
   chatbox.gotoChat();
   scrollBottom();
+  filesend();
 }
 
 let backToChatList = () => {
-  inMessages=false
+  inMessages = false;
   gotoChatList();
   chatbox.backTochatList();
 };
@@ -104,119 +112,210 @@ let controlSentOrReciveMessage = (data) => {
   chatboxMessages.innerHTML = "";
 
   data.messages.map((m) => {
+    let message = m.text;
     if (m.messageType == 2) {
+      if (message.substring(0, 27) === "FiLe-https://tradazine.com/") {
+        let fileExtention = message.split(".").pop();
+        let fileLink = message.slice(5, message.length);
+        if (fileExtention === "jpg" || fileExtention === "png" || fileExtention === "jpeg") {
+          chatboxMessages.innerHTML += `<div class="cems__messages__item cems__messages__item--operator">
+        <img src="${fileLink}" alt="" style="width:144px">
+      </div>`;
+        } else {
+          chatboxMessages.innerHTML += `<div class="cems__messages__item cems__messages__item--operator">
+      <a href="${fileLink}" download target="_blank">Download</a>
+      </div>`;
+        }
+      }else{
       chatboxMessages.innerHTML += `<div class="cems__messages__item cems__messages__item--operator">${m.text}</div>`;
-    } else {
+    }} else {
+      if (message.substring(0, 27) === "FiLe-https://tradazine.com/") {
+        let fileExtention = message.split(".").pop();
+        let fileLink = message.slice(5, message.length);
+        if (fileExtention === "jpg" || fileExtention === "png" || fileExtention === "jpeg") {
+          chatboxMessages.innerHTML += `<div class="cems__messages__item cems__messages__item--visitor">
+        <img src="${fileLink}" alt="" style="width:144px">
+      </div>`;
+        } else {
+          chatboxMessages.innerHTML += `<div class="cems__messages__item cems__messages__item--visitor">
+      <a href="${fileLink}" download target="_blank">Download</a>
+      </div>`;
+        }
+      }else{
       chatboxMessages.innerHTML += `<div class="cems__messages__item cems__messages__item--visitor">${m.text}</div>`;
-    }
+    }}
   });
   return chatboxMessages.innerHTML;
 };
 
 let createMessageOutput = (message) => {
-  let createMessageOutput = document.createElement("div");
-  createMessageOutput.className = "cems__messages__item cems__messages__item--operator";
-  createMessageOutput.innerHTML = `${message}`;
-  document.getElementById("cems__chatbox__messages").appendChild(createMessageOutput);
+  if (message.substring(0, 27) === "FiLe-https://tradazine.com/") {
+    let fileExtention = message.split(".").pop();
+    let fileLink = message.slice(5, message.length);
+    let createMessageOutput = document.createElement("div");
+    createMessageOutput.className = "cems__messages__item cems__messages__item--operator";
+    if (fileExtention === "jpg" || fileExtention === "png" || fileExtention === "jpeg") {
+      createMessageOutput.innerHTML = `<img src="${fileLink}" alt="" style="width:144px">`;
+    } else {
+      createMessageOutput.innerHTML = `<a href="${fileLink}" download target="_blank">Download</a>`;
+    }
+    document.getElementById("cems__chatbox__messages").appendChild(createMessageOutput);
+  } else {
+    let createMessageOutput = document.createElement("div");
+    createMessageOutput.className = "cems__messages__item cems__messages__item--operator";
+    createMessageOutput.innerHTML = `${message}`;
+    document.getElementById("cems__chatbox__messages").appendChild(createMessageOutput);
+  }
 };
 let sendMessage = async (id, message = null) => {
-  
-  if (message == null) {
-    typeMessage = document.getElementById("cems__input__message").value;
-    message={
-      text:typeMessage,
-      type:'TEXT'
+  if (selectFile !== undefined) {
+
+    let formData = new FormData();
+    formData.append("file", selectFile);
+
+    let sendFile = await fetch(`https://tradazine.com/api/v1/store-chat-file`, {
+      method: "POST",
+      body: formData,
+      headers: {
+        Accept: "application/json",
+        Authorization: `Bearer ${allDetails.access_token}`,
+      },
+    })
+      .then((response) => response.json())
+      .then((data) => data);
+
+    if (sendFile.errors) {
+      alert(sendFile.errors.file[0]);
+      return;
+    }
+    console.log(sendFile.data.path);
+    message = {
+      text: `FiLe-https://tradazine.com/${sendFile.data.path}`,
+      type: "TEXT",
+    };
+    document.getElementById(
+      "cems_send_message"
+    ).innerHTML = `<input id="cems__input__message" type="text" placeholder="Write a message..." autocomplete="off"/>`;
+    
+  } else {
+    if (message == null) {
+      typeMessage = document.getElementById("cems__input__message").value;
+      message = {
+        text: typeMessage,
+        type: "TEXT",
+      };
+      document.getElementById("cems__input__message").value = "";
     }
   }
-  console.log(message)
+  console.log(message);
   if (message.text.length == 0) {
     alert("write something");
   } else {
-    document.getElementById("cems__input__message").value = "";
-    let exactMessagesData=chatListDataStore(message,id,allDetails.userName,'sent')
-    
-    newChatListStore(message,id,allDetails.userName,'sent')
-    
+    let exactMessagesData = chatListDataStore(message, id, allDetails.userName, "sent");
+
+    newChatListStore(message, id, allDetails.userName, "sent");
+
     createMessageOutput(message.text);
     var chatEl = document.getElementById("cems__chatbox__messages");
     chatEl.scrollTop = chatEl.scrollHeight;
     await agoraFunction.sendPeerMessage(message, exactMessagesData.id);
   }
 };
-
-let chatListDataStore=(message,id,name,type)=>{
-  let messageType
-  if(type=='sent'){
-    messageType=2
-  }else{
-    messageType=3
-  }
-  
-
-  let exactMessagesData=chatListData.find((d=>d.id==id));
-    if (exactMessagesData == undefined) {
-      exactMessagesData = friendList.find((data) => data.id == id);
-      exactMessagesData.messages = [
-        {
-          messageType: messageType,
-          text: message.text,
-          timeStamp: null,
-          username: name,
-        },
-      ];
-      chatListData.unshift(exactMessagesData);
-      document.getElementById("cems__chatbox__messages").innerHTML = "";
+let filesend = () => {
+  console.log(clickFriendId);
+  document.getElementById("cems_file_upload").addEventListener("change", function (e) {
+    selectFile = e.target.files[0];
+    console.log(selectFile)
+    if (selectFile === undefined) {
+      document.getElementById(
+        "cems_send_message"
+      ).innerHTML = `<input id="cems__input__message" type="text" placeholder="Write a message..." autocomplete="off"/>`;
     } else {
-      let withoutExactMessagesData = chatListData.filter((d) => d.id != id);
-      if (exactMessagesData.messages.length == 0) {
-        document.getElementById("cems__chatbox__messages").innerHTML = "";
+      let fileName = e.target.files[0].name;
+      if (fileName.length > 30) {
+        fileName = fileName.substring(0, 30) + "...";
       }
-      exactMessagesData.messages.push({
+      let filedata = `
+      <div id="selectFileShow">
+      <p>${fileName}</p>
+      </div>
+      `;
+      document.getElementById("cems_send_message").innerHTML = filedata;
+    }
+  });
+};
+
+let chatListDataStore = (message, id, name, type) => {
+  let messageType;
+  if (type == "sent") {
+    messageType = 2;
+  } else {
+    messageType = 3;
+  }
+
+  let exactMessagesData = chatListData.find((d) => d.id == id);
+  if (exactMessagesData == undefined) {
+    exactMessagesData = friendList.find((data) => data.id == id);
+    exactMessagesData.messages = [
+      {
         messageType: messageType,
         text: message.text,
         timeStamp: null,
         username: name,
-      });
-      chatListData=[exactMessagesData,...withoutExactMessagesData]
+      },
+    ];
+    chatListData.unshift(exactMessagesData);
+    document.getElementById("cems__chatbox__messages").innerHTML = "";
+  } else {
+    let withoutExactMessagesData = chatListData.filter((d) => d.id != id);
+    if (exactMessagesData.messages.length == 0) {
+      document.getElementById("cems__chatbox__messages").innerHTML = "";
     }
-    return exactMessagesData
-}
-let newChatListStore=(message,id,name,type)=>{
-  let messageType
-  if(type=='sent'){
-    messageType=2
-  }else{
-    messageType=3
+    exactMessagesData.messages.push({
+      messageType: messageType,
+      text: message.text,
+      timeStamp: null,
+      username: name,
+    });
+    chatListData = [exactMessagesData, ...withoutExactMessagesData];
   }
-  
- let exactMessagesData=newChatList.find((d=>d.id==id));
-    if (exactMessagesData == undefined) {
-      exactMessagesData = friendList.find((data) => data.id == id);
-      exactMessagesData.messages = [
-        {
-          messageType: messageType,
-          text: message.text,
-          timeStamp: null,
-          username: name,
-        },
-      ];
-      newChatList.unshift(exactMessagesData);
-      
-    } else {
-        
-      let withoutExactMessagesData = newChatList.filter((d) => d.id != id);
-    
-      // exactMessagesData.messages.push({
-      //   messageType: 2,
-      //   text: message.text,
-      //   timeStamp: null,
-      //   username: allDetails.userName,
-      // });
-     
-      newChatList=[exactMessagesData,...withoutExactMessagesData]
-    }
-}
+  return exactMessagesData;
+};
+let newChatListStore = (message, id, name, type) => {
+  let messageType;
+  if (type == "sent") {
+    messageType = 2;
+  } else {
+    messageType = 3;
+  }
+
+  let exactMessagesData = newChatList.find((d) => d.id == id);
+  if (exactMessagesData == undefined) {
+    exactMessagesData = friendList.find((data) => data.id == id);
+    exactMessagesData.messages = [
+      {
+        messageType: messageType,
+        text: message.text,
+        timeStamp: null,
+        username: name,
+      },
+    ];
+    newChatList.unshift(exactMessagesData);
+  } else {
+    let withoutExactMessagesData = newChatList.filter((d) => d.id != id);
+
+    // exactMessagesData.messages.push({
+    //   messageType: 2,
+    //   text: message.text,
+    //   timeStamp: null,
+    //   username: allDetails.userName,
+    // });
+
+    newChatList = [exactMessagesData, ...withoutExactMessagesData];
+  }
+};
 let chatboxChating = (data) => {
+  clickFriendId = data.id;
   return `
   <div class="cems__chatbox__header">
     <div class="cems__chat__details">
@@ -243,9 +342,15 @@ let chatboxChating = (data) => {
   }
 </div>
 <div class="cems__chatbox__footer">
-  <img src="./images/icons/attachment.svg" alt="" />
+<label for="cems_file_upload"><img src="./images/icons/attachment.svg" alt="" /></label>
+
+<input type="file" id="cems_file_upload" name="cems_file_upload" style="display:none;">
+  
+  <div id="cems_send_message">
   <input id="cems__input__message" type="text" placeholder="Write a message..." autocomplete="off"/>
+  </div>
   <button class="cems__chatbox__send--footer" onclick=sendMessage('${data.id}')>Send</button>
+  
 </div>
   `;
 };
@@ -259,4 +364,3 @@ var btn = document.getElementById("cems__myBtn");
 // Get the <span> element that closes the modal
 
 // When the user clicks the button, open the modal
-

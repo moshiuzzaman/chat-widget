@@ -138,7 +138,17 @@ body {
   margin: 0px 10px;
   border: 1px solid #dfdbdb;
 }
-
+div#cems_send_message {
+  width: 100%;
+}
+div#selectFileShow {
+  padding: 10px 10px;
+  border-radius: 30px;
+  width: 90%;
+  margin: 0px 10px;
+  border: 1px solid #dfdbdb;
+  font-size: 12px;
+}
 .cems__chatbox__send--footer {
   color: white;
   background: #0998f5;

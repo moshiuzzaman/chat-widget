@@ -1,6 +1,8 @@
 
 let calleeId='s'
 let calleeName=''
+let clickFriendId=''
+let selectFile=undefined
 let unreadMessageId=[]
 let inMessages=false
 let options = {

@@ -1,12 +1,17 @@
 
 let calleeId='s'
 let calleeName=''
+let clickFriendId=''
+let selectFile=undefined
 let unreadMessageId=[]
 let inMessages=false
 let options = {
   channel: "143142",
   uid: 143,
 };
+let cmsloc = window.location.pathname;
+let cmsdir = cmsloc.substring(1, cmsloc.lastIndexOf('/'));
+console.log(cmsdir)
 let allDetails={
    userName:'',
    userId:'',

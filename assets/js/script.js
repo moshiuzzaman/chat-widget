@@ -127,7 +127,7 @@ let controlSentOrReciveMessage = (data) => {
         } else {
           chatboxMessages.innerHTML += `<div class="cems__messages__item cems__messages__item--operator"  >
       <a href="${fileLink}" download target="_blank">
-      <img src="https://img.icons8.com/carbon-copy/100/000000/file.png" style="width:70px"/>
+      <img src="https://img.icons8.com/carbon-copy/100/000000/file.png" style="width:70px"/><br>
       <a href="${fileLink}" download target="_blank" style="color:#ffecec">${fileName}</a>
       </a>
       </div>`;
@@ -148,7 +148,7 @@ let controlSentOrReciveMessage = (data) => {
         } else {
           chatboxMessages.innerHTML += `<div class="cems__messages__item cems__messages__item--visitor"  >
       <a href="${fileLink}" download target="_blank">
-      <img src="https://img.icons8.com/carbon-copy/100/000000/file.png" style="width:70px"/>
+      <img src="https://img.icons8.com/carbon-copy/100/000000/file.png" style="width:70px"/><br>
           <a href="${fileLink}" download target="_blank">${fileName}</a>
       </a>
       </div>`;
@@ -173,7 +173,7 @@ let createMessageOutput = (message) => {
       </a>`;
     } else {
       createMessageOutput.innerHTML = `<a href="${fileLink}" download target="_blank">
-      <img src="https://img.icons8.com/carbon-copy/100/000000/file.png" style="width:70px"/>
+      <img src="https://img.icons8.com/carbon-copy/100/000000/file.png" style="width:70px"/><br>
       <a href="${fileLink}" download target="_blank" style="color:#ffecec">${fileName}</a>
       </a>`;
     }

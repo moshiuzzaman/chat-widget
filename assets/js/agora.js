@@ -363,7 +363,7 @@ let createRecivedMessageOutput = (message, peerId) => {
       </a>`;
     } else {
       createMessageOutput.innerHTML = ` <a href="${fileLink}" download target="_blank">
-      <img src="https://img.icons8.com/carbon-copy/100/000000/file.png" style="width:70px"/>
+      <img src="https://img.icons8.com/carbon-copy/100/000000/file.png" style="width:70px"/><br>
           <a href="${fileLink}" download target="_blank">${fileName}</a>
       </a>`;
     }

@@ -138,6 +138,9 @@ body {
   margin: 0px 10px;
   border: 1px solid #dfdbdb;
 }
+input#cems__input__message:focus-visible {
+  outline: none;
+}
 div#cems_send_message {
   width: 100%;
 }

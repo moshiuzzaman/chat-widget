@@ -443,6 +443,9 @@ let recivedCallOutput = (type) => {
        </div>
    </div>
   `;
+  // <span id="cems_videomuteBtn">
+  //               <svg class="cems__reciveBtn" onclick=videoControl() xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="96" height="96" viewBox="0 0 172 172" style=" fill:#000000;"><g fill="none" fill-rule="nonzero" stroke="none" stroke-width="1" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="10" stroke-dasharray="" stroke-dashoffset="0" font-family="none" font-weight="none" font-size="none" text-anchor="none" style="mix-blend-mode: normal"><path d="M0,172v-172h172v172z" fill="none"></path><path d="M86,172c-47.49649,0 -86,-38.50351 -86,-86v0c0,-47.49649 38.50351,-86 86,-86v0c47.49649,0 86,38.50351 86,86v0c0,47.49649 -38.50351,86 -86,86z" fill="#2aa826"></path><g fill="#ffffff"><path d="M53.93429,61.06c-3.92983,0 -7.12571,3.19588 -7.12571,7.12571v35.62857c0,3.92983 3.19588,7.12571 7.12571,7.12571h46.31714c3.92983,0 7.12571,-3.19588 7.12571,-7.12571v-10.39631l12.02464,9.61693c0.64488,0.51305 1.43227,0.77937 2.22679,0.77937c0.52374,0 1.05316,-0.11974 1.54483,-0.35489c1.23631,-0.59143 2.01802,-1.83983 2.01802,-3.20796v-28.50286c0,-1.36814 -0.78171,-2.61992 -2.01802,-3.21492c-1.23275,-0.58787 -2.70276,-0.42365 -3.77162,0.43144l-12.02464,9.61693v-10.39631c0,-3.92983 -3.19588,-7.12571 -7.12571,-7.12571z"></path></g></g></svg>
+  //          </span>
   getModalSection.innerHTML = output;
   callTimer();
 };

@@ -186,7 +186,9 @@ let createMessageOutput = (message) => {
   }
 };
 let sendMessage = async (id, message = null) => {
+  console.log('object')
   if (selectFile !== undefined) {
+    console.log('object2')
     document.getElementById("sendMessageBtn").disabled = true;
     let formData = new FormData();
     formData.append("file", selectFile);
@@ -200,7 +202,14 @@ let sendMessage = async (id, message = null) => {
       },
     })
       .then((response) => response.json())
-      .then((data) => data);
+      .then((data) => {
+        document.getElementById(
+          "cems_send_message"
+        ).innerHTML = `<input id="cems__input__message" type="text" placeholder="Write a message..." autocomplete="off"/>`;
+        selectFile=undefined
+        document.getElementById("sendMessageBtn").disabled = false;
+       return data
+      });
 
     if (sendFile.errors) {
       alert(sendFile.errors.file[0]);
@@ -211,11 +220,7 @@ let sendMessage = async (id, message = null) => {
       text: `FiLe-https://tradazine.com/${sendFile.data.path}`,
       type: "TEXT",
     };
-    document.getElementById(
-      "cems_send_message"
-    ).innerHTML = `<input id="cems__input__message" type="text" placeholder="Write a message..." autocomplete="off"/>`;
-    selectFile=undefined
-    document.getElementById("sendMessageBtn").disabled = false;
+    
   } else {
     if (message == null) {
       typeMessage = document.getElementById("cems__input__message").value;

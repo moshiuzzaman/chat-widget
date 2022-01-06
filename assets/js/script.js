@@ -125,7 +125,7 @@ let controlSentOrReciveMessage = (data) => {
         </a>
       </div>`;
         } else {
-          chatboxMessages.innerHTML += `<div class="cems__messages__item cems__messages__item--operator" style="max-width: 60%;" >
+          chatboxMessages.innerHTML += `<div class="cems__messages__item cems__messages__item--operator"  >
       <a href="${fileLink}" download target="_blank">
       <img src="https://img.icons8.com/carbon-copy/100/000000/file.png" style="width:70px"/>
       <a href="${fileLink}" download target="_blank" style="color:#ffecec">${fileName}</a>
@@ -146,7 +146,7 @@ let controlSentOrReciveMessage = (data) => {
           </a>
       </div>`;
         } else {
-          chatboxMessages.innerHTML += `<div class="cems__messages__item cems__messages__item--visitor" style="max-width: 60%;" >
+          chatboxMessages.innerHTML += `<div class="cems__messages__item cems__messages__item--visitor"  >
       <a href="${fileLink}" download target="_blank">
       <img src="https://img.icons8.com/carbon-copy/100/000000/file.png" style="width:70px"/>
           <a href="${fileLink}" download target="_blank">${fileName}</a>
@@ -167,7 +167,6 @@ let createMessageOutput = (message) => {
     let fileName=message.slice(38, message.length);
     let createMessageOutput = document.createElement("div");
     createMessageOutput.className = "cems__messages__item cems__messages__item--operator";
-    createMessageOutput.style.width="60%"
     if (fileExtention === "jpg" || fileExtention === "png" || fileExtention === "jpeg") {
       createMessageOutput.innerHTML = `<a href="${fileLink}" download target="_blank">
       <img src="${fileLink}" alt="" style="width:144px">

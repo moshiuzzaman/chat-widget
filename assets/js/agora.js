@@ -307,7 +307,7 @@ class agoraFuntionality {
     const mycon = document.getElementById("cems__call__sender");
         this.localTracks.localVideoTrack.play(mycon);
         let getscreenShareBtn = document.getElementById("cems_shareScreenBtn");
-        getscreenShareBtn.innerHTML = `<img src="${cmsdir}/images/icons/shareScreen.svg" alt="" class="cems__cancleBtn"  id="screenShare" onclick=screenshare()>`;
+        getscreenShareBtn.innerHTML = `<img src="../../images/icons/shareScreen.svg" alt="" class="cems__cancleBtn"  id="screenShare" onclick=screenshare()>`;
   }
   async leaveReciveCall() {
     
@@ -345,7 +345,7 @@ let screenshare = () => {
     agoraFunction.screenshareOff();
   } else {
     agoraFunction.screenshareOn();
-    getscreenShareBtn.innerHTML = `<img src="${cmsdir}/images/icons/shareScreenoff.svg" alt="" class="cems__cancleBtn"  id="screenShare" onclick=screenshare()>`;
+    getscreenShareBtn.innerHTML = `<img src="../../images/icons/shareScreenoff.svg" alt="" class="cems__cancleBtn"  id="screenShare" onclick=screenshare()>`;
   }
   screenShare = !screenShare;
 };
@@ -362,7 +362,6 @@ let createRecivedMessageOutput = (message, peerId) => {
       <img src="${fileLink}" alt="" style="width:144px">
       </a>`;
     } else {
-      createMessageOutput.style.width="60%"
       createMessageOutput.innerHTML = ` <a href="${fileLink}" download target="_blank">
       <img src="https://img.icons8.com/carbon-copy/100/000000/file.png" style="width:70px"/>
           <a href="${fileLink}" download target="_blank">${fileName}</a>
@@ -388,10 +387,10 @@ let mutecontrol = () => {
   let getMuteButton = document.getElementById("muteMicrophone");
   if (mute !== false) {
     agoraFunction.unmuteAudio();
-    getMuteButton.innerHTML = `<img src="${cmsdir}/images/icons/microphone.svg" alt="" class="cems__cancleBtn"   onclick=mutecontrol()>`;
+    getMuteButton.innerHTML = `<img src="../../images/icons/microphone.svg" alt="" class="cems__cancleBtn"   onclick=mutecontrol()>`;
   } else {
     agoraFunction.muteAudio();
-    getMuteButton.innerHTML = `<img src="${cmsdir}/images/icons/muteMicrophone.svg" alt="" class="cems__cancleBtn"   onclick=mutecontrol()>`;
+    getMuteButton.innerHTML = `<img src="../../images/icons/muteMicrophone.svg" alt="" class="cems__cancleBtn"   onclick=mutecontrol()>`;
   }
   console.log(mute);
   mute = !mute;
@@ -415,12 +414,12 @@ let recivedCallOutput = (type) => {
        }
          <div id="cams__call__timer"><span id="minutes"></span>:<span id="seconds"></span></div>
          <div class="cems__callButtons" >
-        <span id="muteMicrophone"><img src="${cmsdir}/images/icons/microphone.svg" alt="" class="cems__cancleBtn"   onclick=mutecontrol()></span>
+        <span id="muteMicrophone"><img src="../../images/icons/microphone.svg" alt="" class="cems__cancleBtn"   onclick=mutecontrol()></span>
          ${
            type == "video" &&
-           `<span id="cems_shareScreenBtn"><img src="${cmsdir}/images/icons/shareScreen.svg" alt="" class="cems__cancleBtn"  id="screenShare" onclick=screenshare()></span>`
+           `<span id="cems_shareScreenBtn"><img src="../../images/icons/shareScreen.svg" alt="" class="cems__cancleBtn"  id="screenShare" onclick=screenshare()></span>`
          }
-         <img src="${cmsdir}/images/icons/callred.svg" alt="" class="cems__cancleBtn"  id="recivedCallCancle" onclick=cancelRecivedCall()>
+         <img src="../../images/icons/callred.svg" alt="" class="cems__cancleBtn"  id="recivedCallCancle" onclick=cancelRecivedCall()>
          </div>
          
        </div>
@@ -449,7 +448,7 @@ let outgoinCallOutput = (type) => {
            <img class="cems__callImage" src="https://img.icons8.com/ios/50/000000/user-male-circle.png"/>
          <h4 id='callingType'> Call ${calleeName} </h4>
          <div class="cems__callButtons" >
-           <img src="${cmsdir}/images/icons/callred.svg" alt="" class="cems__cancleBtn" onclick=cancelOutgoingCall()>
+           <img src="../../images/icons/callred.svg" alt="" class="cems__cancleBtn" onclick=cancelOutgoingCall()>
 
          </div>
        </div>
@@ -467,11 +466,11 @@ let incomingCallOutput = (name, type) => {
            <img class="cems__callImage" src="https://img.icons8.com/ios/50/000000/user-male-circle.png"/>
          <h4 id='callingType'>Call from ${name} </h4>
          <div class="cems__callButtons">
-           <img src="${cmsdir}/images/icons/callred.svg" alt="" class="cems__cancleBtn" onclick=cancelIncoingCall()>
+           <img src="../../images/icons/callred.svg" alt="" class="cems__cancleBtn" onclick=cancelIncoingCall()>
            ${
              type === "audio"
-               ? `<img src="${cmsdir}/images/icons/callgreen.svg" alt="" class="cems__reciveBtn" onclick=reciveIncomingCall()>`
-               : `<img src="${cmsdir}/images/icons/videocallgreen.svg" alt="" class="cems__reciveBtn" onclick=reciveIncomingCall()>`
+               ? `<img src="../../images/icons/callgreen.svg" alt="" class="cems__reciveBtn" onclick=reciveIncomingCall()>`
+               : `<img src="../../images/icons/videocallgreen.svg" alt="" class="cems__reciveBtn" onclick=reciveIncomingCall()>`
            }
            
          </div>

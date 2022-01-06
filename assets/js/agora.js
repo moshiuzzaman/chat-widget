@@ -352,13 +352,21 @@ let screenshare = () => {
 let createRecivedMessageOutput = (message, peerId) => {
   let createMessageOutput = document.createElement("div");
   if (message.substring(0, 27) === "FiLe-https://tradazine.com/") {
-    let fileExtention = message.split(".").pop();
+    let fileExtention = message.split(".").pop().toLowerCase();
     let fileLink = message.slice(5, message.length);
+    let fileName=message.slice(38, message.length);
     createMessageOutput.className = "cems__messages__item cems__messages__item--visitor";
+    
     if (fileExtention === "jpg" || fileExtention === "png" || fileExtention === "jpeg") {
-      createMessageOutput.innerHTML = `<img src="${fileLink}" alt="" style="width:144px">`;
+      createMessageOutput.innerHTML = ` <a href="${fileLink}" download target="_blank">
+      <img src="${fileLink}" alt="" style="width:144px">
+      </a>`;
     } else {
-      createMessageOutput.innerHTML = `<a href="${fileLink}" download target="_blank">Download</a>`;
+      createMessageOutput.style.width="60%"
+      createMessageOutput.innerHTML = ` <a href="${fileLink}" download target="_blank">
+      <img src="https://img.icons8.com/carbon-copy/100/000000/file.png" style="width:70px"/>
+          <a href="${fileLink}" download target="_blank">${fileName}</a>
+      </a>`;
     }
     document.getElementById("cems__chatbox__messages").appendChild(createMessageOutput);
   } else {

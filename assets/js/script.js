@@ -115,30 +115,42 @@ let controlSentOrReciveMessage = (data) => {
     let message = m.text;
     if (m.messageType == 2) {
       if (message.substring(0, 27) === "FiLe-https://tradazine.com/") {
-        let fileExtention = message.split(".").pop();
+        let fileExtention = message.split(".").pop().toLowerCase();
         let fileLink = message.slice(5, message.length);
+        let fileName=message.slice(38, message.length);
         if (fileExtention === "jpg" || fileExtention === "png" || fileExtention === "jpeg") {
           chatboxMessages.innerHTML += `<div class="cems__messages__item cems__messages__item--operator">
+<a href="${fileLink}" download target="_blank">
         <img src="${fileLink}" alt="" style="width:144px">
+        </a>
       </div>`;
         } else {
-          chatboxMessages.innerHTML += `<div class="cems__messages__item cems__messages__item--operator">
-      <a href="${fileLink}" download target="_blank">Download</a>
+          chatboxMessages.innerHTML += `<div class="cems__messages__item cems__messages__item--operator" style="max-width: 60%;" >
+      <a href="${fileLink}" download target="_blank">
+      <img src="https://img.icons8.com/carbon-copy/100/000000/file.png" style="width:70px"/>
+      <a href="${fileLink}" download target="_blank" style="color:#ffecec">${fileName}</a>
+      </a>
       </div>`;
         }
       }else{
       chatboxMessages.innerHTML += `<div class="cems__messages__item cems__messages__item--operator">${m.text}</div>`;
     }} else {
       if (message.substring(0, 27) === "FiLe-https://tradazine.com/") {
-        let fileExtention = message.split(".").pop();
+        let fileExtention = message.split(".").pop().toLowerCase();
         let fileLink = message.slice(5, message.length);
+        let fileName=message.slice(38, message.length);
         if (fileExtention === "jpg" || fileExtention === "png" || fileExtention === "jpeg") {
-          chatboxMessages.innerHTML += `<div class="cems__messages__item cems__messages__item--visitor">
-        <img src="${fileLink}" alt="" style="width:144px">
+          chatboxMessages.innerHTML += `<div class="cems__messages__item cems__messages__item--visitor" >
+          <a href="${fileLink}" download target="_blank">
+          <img src="${fileLink}" alt="" style="width:144px">
+          </a>
       </div>`;
         } else {
-          chatboxMessages.innerHTML += `<div class="cems__messages__item cems__messages__item--visitor">
-      <a href="${fileLink}" download target="_blank">Download</a>
+          chatboxMessages.innerHTML += `<div class="cems__messages__item cems__messages__item--visitor" style="max-width: 60%;" >
+      <a href="${fileLink}" download target="_blank">
+      <img src="https://img.icons8.com/carbon-copy/100/000000/file.png" style="width:70px"/>
+          <a href="${fileLink}" download target="_blank">${fileName}</a>
+      </a>
       </div>`;
         }
       }else{
@@ -150,14 +162,21 @@ let controlSentOrReciveMessage = (data) => {
 
 let createMessageOutput = (message) => {
   if (message.substring(0, 27) === "FiLe-https://tradazine.com/") {
-    let fileExtention = message.split(".").pop();
+    let fileExtention = message.split(".").pop().toLowerCase();
     let fileLink = message.slice(5, message.length);
+    let fileName=message.slice(38, message.length);
     let createMessageOutput = document.createElement("div");
     createMessageOutput.className = "cems__messages__item cems__messages__item--operator";
+    createMessageOutput.style.width="60%"
     if (fileExtention === "jpg" || fileExtention === "png" || fileExtention === "jpeg") {
-      createMessageOutput.innerHTML = `<img src="${fileLink}" alt="" style="width:144px">`;
+      createMessageOutput.innerHTML = `<a href="${fileLink}" download target="_blank">
+      <img src="${fileLink}" alt="" style="width:144px">
+      </a>`;
     } else {
-      createMessageOutput.innerHTML = `<a href="${fileLink}" download target="_blank">Download</a>`;
+      createMessageOutput.innerHTML = `<a href="${fileLink}" download target="_blank">
+      <img src="https://img.icons8.com/carbon-copy/100/000000/file.png" style="width:70px"/>
+      <a href="${fileLink}" download target="_blank" style="color:#ffecec">${fileName}</a>
+      </a>`;
     }
     document.getElementById("cems__chatbox__messages").appendChild(createMessageOutput);
   } else {
@@ -169,7 +188,7 @@ let createMessageOutput = (message) => {
 };
 let sendMessage = async (id, message = null) => {
   if (selectFile !== undefined) {
-
+    document.getElementById("sendMessageBtn").disabled = true;
     let formData = new FormData();
     formData.append("file", selectFile);
 
@@ -196,7 +215,8 @@ let sendMessage = async (id, message = null) => {
     document.getElementById(
       "cems_send_message"
     ).innerHTML = `<input id="cems__input__message" type="text" placeholder="Write a message..." autocomplete="off"/>`;
-    
+    selectFile=undefined
+    document.getElementById("sendMessageBtn").disabled = false;
   } else {
     if (message == null) {
       typeMessage = document.getElementById("cems__input__message").value;
@@ -207,10 +227,11 @@ let sendMessage = async (id, message = null) => {
       document.getElementById("cems__input__message").value = "";
     }
   }
-  console.log(message);
+  
   if (message.text.length == 0) {
     alert("write something");
   } else {
+    console.log(message);
     let exactMessagesData = chatListDataStore(message, id, allDetails.userName, "sent");
 
     newChatListStore(message, id, allDetails.userName, "sent");
@@ -349,7 +370,7 @@ let chatboxChating = (data) => {
   <div id="cems_send_message">
   <input id="cems__input__message" type="text" placeholder="Write a message..." autocomplete="off"/>
   </div>
-  <button class="cems__chatbox__send--footer" onclick=sendMessage('${data.id}')>Send</button>
+  <button id="sendMessageBtn" class="cems__chatbox__send--footer" onclick=sendMessage('${data.id}')>Send</button>
   
 </div>
   `;

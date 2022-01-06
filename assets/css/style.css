@@ -330,6 +330,13 @@ div#cems__call__content h3 {
 .cems__callImage img {
   width: 86px;
 }
+.cems__callButtons svg {
+  width: 50px !important;
+  cursor: pointer;
+  margin: 10px;
+  padding: 0;
+  height: auto;
+}
 /* **********reciveCall************* */
 #cems__recivedcall__content{
   position: relative;

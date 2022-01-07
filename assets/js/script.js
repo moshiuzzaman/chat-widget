@@ -11,7 +11,7 @@ let usersToggle = (data) => {
   let element = `
     <div class="cems__chat__list" id='${data.id}' onclick={showMesseges(this.id)}>
     <div class="cems__friend__icon">
-      <p>${data.name.charAt(0)}</p>
+      <p>${data.name.toUpperCase().charAt(0)}</p>
     </div>
     <div class="cems__chatlist__content">
       <h4 class="cems__chatlist__friendName">${data.name}</h4>
@@ -119,7 +119,7 @@ let controlSentOrReciveMessage = (data) => {
         let fileLink = message.slice(5, message.length);
         let fileName=message.slice(38, message.length);
         if (fileExtention === "jpg" || fileExtention === "png" || fileExtention === "jpeg") {
-          chatboxMessages.innerHTML += `<div class="cems__messages__item cems__messages__item--operator">
+          chatboxMessages.innerHTML += `<div class="cems__messages__item cems__messages__item--operator_image">
 <a href="${fileLink}" download target="_blank">
         <img src="${fileLink}" alt="" style="width:144px">
         </a>
@@ -140,7 +140,7 @@ let controlSentOrReciveMessage = (data) => {
         let fileLink = message.slice(5, message.length);
         let fileName=message.slice(38, message.length);
         if (fileExtention === "jpg" || fileExtention === "png" || fileExtention === "jpeg") {
-          chatboxMessages.innerHTML += `<div class="cems__messages__item cems__messages__item--visitor" >
+          chatboxMessages.innerHTML += `<div class="cems__messages__item cems__messages__item--visitor_image" >
           <a href="${fileLink}" download target="_blank">
           <img src="${fileLink}" alt="" style="width:144px">
           </a>
@@ -166,12 +166,13 @@ let createMessageOutput = (message) => {
     let fileLink = message.slice(5, message.length);
     let fileName=message.slice(38, message.length);
     let createMessageOutput = document.createElement("div");
-    createMessageOutput.className = "cems__messages__item cems__messages__item--operator";
     if (fileExtention === "jpg" || fileExtention === "png" || fileExtention === "jpeg") {
+createMessageOutput.className = "cems__messages__item cems__messages__item--operator_image";
       createMessageOutput.innerHTML = `<a href="${fileLink}" download target="_blank">
       <img src="${fileLink}" alt="" style="width:144px">
       </a>`;
     } else {
+    createMessageOutput.className = "cems__messages__item cems__messages__item--operator";
       createMessageOutput.innerHTML = `<a href="${fileLink}" download target="_blank">
       <img src="https://img.icons8.com/carbon-copy/100/000000/file.png" style="width:70px"/><br>
       <a href="${fileLink}" download target="_blank" style="color:#ffecec">${fileName}</a>
@@ -347,7 +348,7 @@ let chatboxChating = (data) => {
     <div id="cems__chatbox_backButton--header" onclick=backToChatList()>
     <img src="./images/icons/backArrow.svg" alt="" />
     </div>
-    <div class="cems__friend__icon">
+    <div class="cems__chatHead__friend__icon">
       <p>${data.name.toUpperCase().charAt(0)}</p>
     </div>
     <div class="cems__chatbox__content--header">

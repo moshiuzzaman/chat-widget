@@ -21,16 +21,35 @@ html {
 /* 300;0,400;0,600;1,300 */
 
 body {
-  font-family: "Nunito", sans-serif;
+  font-family: 'Inter', sans-serif;
   font-weight: 400;
   font-size: 100%;
   background: #f1f1f1;
+}
+/* width */
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0); 
+}
+ 
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: rgb(204, 204, 204); 
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: rgb(177, 174, 174); 
 }
 
 .cems__chatbox__support {
   background: #f9f9f9;
   height: 430px;
-  width: 375px;
+  width: 390px;
   box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.1);
   border-radius: 20px;
   position: fixed;
@@ -40,15 +59,15 @@ body {
 
 /* HEADER */
 .cems__chatbox__header {
-  background: var(--primaryGradient);
+  background: white;
   display: flex;
   flex-direction: row;
   align-items: center;
-  padding: 12px 10px;
+  padding: 18px 10px;
   border-top-left-radius: 20px;
   border-top-right-radius: 20px;
-  box-shadow: var(--primaryBoxShadow);
   justify-content: space-between;
+  border-bottom: 1px solid #e8e8e8;
 }
 .cems__chat__details {
   display: flex;
@@ -84,9 +103,28 @@ body {
   max-width: 100%;
   font-size: 13px;
 }
+.cems__messages__item--operator_image {
+  margin-left: auto;
+  padding: 0;
+  background: none;
+}
+.cems__messages__item--operator_image img {
+  border-top-left-radius: 20px;
+  border-top-right-radius: 20px;
+  border-bottom-left-radius: 20px;
+}
 
 .cems__messages__item--visitor,
 .cems__messages__item--typing {
+  border-top-left-radius: 20px;
+  border-top-right-radius: 20px;
+  border-bottom-right-radius: 20px;
+}
+.cems__messages__item--visitor_image{
+  padding: 0;
+  background: none;
+}
+.cems__messages__item--visitor_image img{
   border-top-left-radius: 20px;
   border-top-right-radius: 20px;
   border-bottom-right-radius: 20px;
@@ -121,6 +159,17 @@ body {
   align-items: center;
   text-align: center;
   cursor: pointer;
+}
+.cems__chatlist__footer__button p {
+  padding: 4px;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  -webkit-box-pack: center;
+  justify-content: center;
+  -webkit-box-align: center;
+  align-items: center;
+  font-size: 12px;
 }
 .cems__chatlist__footer__button img {
   width: 25px;
@@ -180,7 +229,9 @@ div#selectFileShow {
 
 /* Chat aditional css */
 .cems__container h4 {
-  font-size: 19px;
+  font-size: 15px;
+  font-weight: 600;
+  line-height: 22px;
 }
 #cems__chatbox_backButton--header img {
   width: 31px;
@@ -195,19 +246,41 @@ div#cems__chatbox__chatting {
   flex-direction: column;
   background: #f9f9f9;
   height: 430px;
-  width: 375px;
+  width: 390px;
   border-radius: 38px;
 }
 .cems__hide__section {
   display: none !important;
 }
 div#cems__chatlist__header {
-  border-bottom: 1px solid gray;
+  border-bottom: 1px solid rgb(234, 234, 234);
+}
+.cems__chatlist__content {
+  display: block;
+  width: 100%;
+  border-bottom: 1px solid rgb(234, 234, 234);
+  padding-bottom: 8px;
+}
+.cems__chatlist__content p {
+  margin: 0px;
+  font-size: 13px;
+  font-weight: 400;
+  width: calc(100% - 50px);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  line-height: 20px;
+  color: rgba(20, 20, 20, 0.6);
 }
 div#cems__chatlist__header h3 {
-  padding: 14px 22px;
-  font-size: 20px;
-  font-weight: bold;
+  padding: 22px 22px;
+  margin: 0px;
+  display: inline-block;
+  width: 100%;
+  text-align: left;
+  font-size: 22px;
+  font-weight: 700;
+  line-height: 26px;
 }
 div#cems__all__chatlist {
   height: 306px;
@@ -223,28 +296,41 @@ p.cems__no_found {
   align-items: center;
   padding: 12px 10px;
   cursor: pointer;
-  border-bottom: 1px solid #0998f5;
   margin: 0px 21px;
 }
 .unseen__message h4 {
   color: red !important;
 }
 .cems__friend__icon {
-  background: #0998f5;
+  background: #a7baff;
   text-align: center;
   border-radius: 50%;
   color: black;
-  margin-right: 10px;
-  width: 43px;
-  height: 41px;
+  width: 48px;
+  height: 39px;
   justify-content: center;
   align-items: center;
   display: flex;
+  margin: -4px 15px 2px -6px;
+}
+.cems__chatHead__friend__icon {
+  background: #a7baff;
+  text-align: center;
+  border-radius: 50%;
+  width: 39px;
+  height: 39px;
+  justify-content: center;
+  align-items: center;
+  display: flex;
+  margin: 0px 9px 2px 0px;
+  color: #fcf2f2;
+  font-weight: 700;
+  font-size: 20px;
 }
 .cems__friend__icon p {
-  font-weight: bold;
+  font-weight: 700;
   font-size: 20px;
-  color: white;
+  color: #fcf2f2;
   margin-bottom: 0;
 }
 

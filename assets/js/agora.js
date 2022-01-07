@@ -357,13 +357,15 @@ let createRecivedMessageOutput = (message, peerId) => {
     let fileExtention = message.split(".").pop().toLowerCase();
     let fileLink = message.slice(5, message.length);
     let fileName=message.slice(38, message.length);
-    createMessageOutput.className = "cems__messages__item cems__messages__item--visitor";
+    
     
     if (fileExtention === "jpg" || fileExtention === "png" || fileExtention === "jpeg") {
+      createMessageOutput.className = "cems__messages__item cems__messages__item--visitor_image";
       createMessageOutput.innerHTML = ` <a href="${fileLink}" download target="_blank">
       <img src="${fileLink}" alt="" style="width:144px">
       </a>`;
     } else {
+    createMessageOutput.className = "cems__messages__item cems__messages__item--visitor";
       createMessageOutput.innerHTML = ` <a href="${fileLink}" download target="_blank">
       <img src="https://img.icons8.com/carbon-copy/100/000000/file.png" style="width:70px"/><br>
           <a href="${fileLink}" download target="_blank">${fileName}</a>

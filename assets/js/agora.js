@@ -362,7 +362,7 @@ let createRecivedMessageOutput = (message, peerId) => {
     if (fileExtention === "jpg" || fileExtention === "png" || fileExtention === "jpeg") {
       createMessageOutput.className = "cems__messages__item cems__messages__item--visitor_image";
       createMessageOutput.innerHTML = ` <a href="${fileLink}" download target="_blank">
-      <img src="${fileLink}" alt="" style="width:144px">
+      <img src="${fileLink}" alt="" style="width:125px">
       </a>`;
     } else {
     createMessageOutput.className = "cems__messages__item cems__messages__item--visitor";

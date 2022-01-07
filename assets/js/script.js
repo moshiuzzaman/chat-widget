@@ -121,7 +121,7 @@ let controlSentOrReciveMessage = (data) => {
         if (fileExtention === "jpg" || fileExtention === "png" || fileExtention === "jpeg") {
           chatboxMessages.innerHTML += `<div class="cems__messages__item cems__messages__item--operator_image">
 <a href="${fileLink}" download target="_blank">
-        <img src="${fileLink}" alt="" style="width:144px">
+        <img src="${fileLink}" alt="" style="width:125px">
         </a>
       </div>`;
         } else {
@@ -142,7 +142,7 @@ let controlSentOrReciveMessage = (data) => {
         if (fileExtention === "jpg" || fileExtention === "png" || fileExtention === "jpeg") {
           chatboxMessages.innerHTML += `<div class="cems__messages__item cems__messages__item--visitor_image" >
           <a href="${fileLink}" download target="_blank">
-          <img src="${fileLink}" alt="" style="width:144px">
+          <img src="${fileLink}" alt="" style="width:125px">
           </a>
       </div>`;
         } else {
@@ -169,7 +169,7 @@ let createMessageOutput = (message) => {
     if (fileExtention === "jpg" || fileExtention === "png" || fileExtention === "jpeg") {
 createMessageOutput.className = "cems__messages__item cems__messages__item--operator_image";
       createMessageOutput.innerHTML = `<a href="${fileLink}" download target="_blank">
-      <img src="${fileLink}" alt="" style="width:144px">
+      <img src="${fileLink}" alt="" style="width:125px">
       </a>`;
     } else {
     createMessageOutput.className = "cems__messages__item cems__messages__item--operator";

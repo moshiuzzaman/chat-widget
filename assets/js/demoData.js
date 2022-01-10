@@ -1,23 +1,22 @@
-
-let calleeId='s'
-let calleeName=''
-let clickFriendId=''
-let selectFile=undefined
-let unreadMessageId=[]
-let inMessages=false
+let calleeId = "s";
+let calleeName = "";
+let clickFriendId = "";
+let selectFile = undefined;
+let unreadMessageId = [];
+let inMessages = false;
 let options = {
   channel: "143142",
   uid: 143,
 };
 let cmsloc = window.location.pathname;
-let cmsdir = cmsloc.substring(1, cmsloc.lastIndexOf('/'));
-console.log(cmsdir)
-let allDetails={
-   userName:'',
-   userId:'',
-   access_token:''
-}
-let newChatList=[]
+let cmsdir = cmsloc.substring(1, cmsloc.lastIndexOf("/"));
+console.log(cmsdir);
+let allDetails = {
+  userName: "",
+  userId: "",
+  access_token: "",
+};
+let newChatList = [];
 let chatListData = [
   {
     name: "Zarif",
@@ -34,7 +33,7 @@ let chatListData = [
         text: "I am fine.",
         timeStamp: null,
         username: "shozonraj",
-      }
+      },
     ],
   },
   {
@@ -42,41 +41,38 @@ let chatListData = [
     id: 235,
     messages: [],
   },
-  
 ];
 let friendList = [
   {
     uid: "difs-234",
     name: "Zarif",
   },
-  
+
   {
     name: "Raj",
-    uid: "difs-235"
+    uid: "difs-235",
   },
   {
     name: "shozon raj",
-    uid: "difs-238"
+    uid: "difs-238",
   },
   {
     name: "Raj1",
-    uid: "difs-236"
+    uid: "difs-236",
   },
   {
     name: "Raj3",
-    uid: "difs-237"
+    uid: "difs-237",
   },
   {
     name: "shozonraj",
-    uid: "difs-233"
-  }
+    uid: "difs-233",
+  },
 ];
 
-
-
-  window.addEventListener("beforeunload", function (e) {
-    localStorage.setItem(`CemsChatDataFor${allDetails.userId}`, JSON.stringify(chatListData))
-  });
+window.addEventListener("beforeunload", function (e) {
+  localStorage.setItem(`CemsChatDataFor${allDetails.userId}`, JSON.stringify(chatListData));
+});
 
 //   window.onbeforeunload = function(e) {
 //     if(newChatList!==[]){
@@ -92,30 +88,30 @@ let friendList = [
 //      })();
 //     }
 //  };
-  
-let fetchData = (uid,allMessage=[]) => {
-    let testd=[]
-allMessage.map(am=>{
-  let strStart=am.text[0]
-  let strEnd=am.text[am.text.length-1]
-  if(strStart==="[" && strEnd==="]"){
-    let parseAm=JSON.parse(am.text)
-    parseAm.map(d=>{
-      let isa=true
-      testd.map(td=>{
-        if(d.id===td.id){
-          td.messages=[...td.messages,...d.messages]
-          isa=false
+
+let fetchData = (uid, allMessage = []) => {
+  let testd = [];
+  allMessage.map((am) => {
+    let strStart = am.text[0];
+    let strEnd = am.text[am.text.length - 1];
+    if (strStart === "[" && strEnd === "]") {
+      let parseAm = JSON.parse(am.text);
+      parseAm.map((d) => {
+        let isa = true;
+        testd.map((td) => {
+          if (d.id === td.id) {
+            td.messages = [...td.messages, ...d.messages];
+            isa = false;
+          }
+        });
+        if (isa === true) {
+          testd.unshift(d);
         }
-      })
-      if(isa===true){
-        testd.unshift(d)
-      }
-    })
-  }else{
-    console.log(strStart,am.text[am.text.length-2]) 
-  }
-})
+      });
+    } else {
+      console.log(strStart, am.text[am.text.length - 2]);
+    }
+  });
 
   let data = JSON.parse(localStorage.getItem(`CemsChatDataFor${uid}`));
   console.log(data);
@@ -123,18 +119,16 @@ allMessage.map(am=>{
     // friendList=[]
     // chatListData=[]
   } else {
-
-    if (data=== undefined) {
+    if (data === undefined) {
       chatListData = [];
     } else {
-      chatListData = data
+      chatListData = data;
     }
   }
   // chatListData=testd
-  addchangeUser(uid)
+  addchangeUser(uid);
 };
-let addchangeUser=(uid)=>{
-  
+let addchangeUser = (uid) => {
   if (uid === "242") {
     let withoutData = chatListData.filter((data) => data.id !== uid);
     let alData = chatListData.find((data) => data.id == "243");
@@ -150,7 +144,7 @@ let addchangeUser=(uid)=>{
   } else {
     let withoutData = chatListData.filter((data) => data.id != uid);
     let alData = chatListData.find((data) => data.id == "242");
-    chatListData=withoutData
+    chatListData = withoutData;
     if (alData === undefined) {
       chatListData.push({
         name: "User3",
@@ -159,9 +153,53 @@ let addchangeUser=(uid)=>{
       });
     }
   }
-}
+};
 
+let getCurrentDateTime = () => {
+  var myDate = new Date();
 
+  let daysList = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+  let monthsList = [
+    "Jan",
+    "Feb",
+    "Mar",
+    "Apr",
+    "May",
+    "Jun",
+    "Jul",
+    "Aug",
+    "Sep",
+    "Aug",
+    "Oct",
+    "Nov",
+    "Dec",
+  ];
 
+  let date = myDate.getDate();
+  let month = monthsList[myDate.getMonth()];
+  let year = myDate.getFullYear();
+  let day = daysList[myDate.getDay()];
 
-console.log('DD');
+  let today = `${date} ${month} ${year}`;
+
+  let amOrPm;
+  let twelveHours = function () {
+    if (myDate.getHours() > 12) {
+      amOrPm = "PM";
+      let twentyFourHourTime = myDate.getHours();
+      let conversion = twentyFourHourTime - 12;
+      return `${conversion}`;
+    } else {
+      amOrPm = "AM";
+      return `${myDate.getHours()}`;
+    }
+  };
+  let hours = twelveHours();
+  let minutes = myDate.getMinutes();
+
+  let currentTime = `${hours}:${minutes} ${amOrPm}`;
+  let currentDateTime=`${today} | ${currentTime}`
+  return currentDateTime
+};
+
+console.log("DD");

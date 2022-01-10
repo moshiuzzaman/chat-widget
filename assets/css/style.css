@@ -137,7 +137,15 @@ body {
   background: var(--primary);
   color: white;
 }
-
+.cems__messages__time-operator {
+  margin-left: auto;
+  font-size: 10px;
+  margin-top: 3px;
+}
+.cems__messages__time-visitor {
+  font-size: 10px;
+  margin-top: 3px;
+}
 /* FOOTER */
 .cems__chatbox__footer,
 .cems__chatbox__chatlist__footer {
@@ -206,7 +214,7 @@ div#selectFileShow {
   background: #0998f5;
   border: none;
   width: 61px;
-  height: 36px;
+  height: 37px;
   cursor: pointer;
   position: absolute;
   right: 19px;
@@ -216,14 +224,12 @@ div#selectFileShow {
 .cems__chatbox__button button,
 .cems__chatbox__button button:focus,
 .cems__chatbox__button button:visited {
-  padding: 10px;
-  background: white;
+  padding: 14px 13px 8px 13px;
+  background: #03a9f4;
   border: none;
   outline: none;
-  border-top-left-radius: 50px;
-  border-top-right-radius: 50px;
-  border-bottom-left-radius: 50px;
-  box-shadow: 0px 10px 15px rgba(0, 0, 0, 0.1);
+  border-radius: 74px;
+  box-shadow: 0px 10px 15px rgb(0 0 0 / 10%);
   cursor: pointer;
 }
 
@@ -232,6 +238,14 @@ div#selectFileShow {
   font-size: 15px;
   font-weight: 600;
   line-height: 22px;
+}
+p.cems__onlineText {
+  font-size: 10px;
+  color: green;
+}
+p.cems__offlineText {
+  font-size: 10px;
+  color: gray
 }
 #cems__chatbox_backButton--header img {
   width: 31px;
@@ -261,6 +275,17 @@ div#cems__chatlist__header {
   border-bottom: 1px solid rgb(234, 234, 234);
   padding-bottom: 8px;
 }
+
+
+.cems__chatlist__time {
+  width: 21%;
+  float: right;
+  font-size: 6px !important;
+}
+.cems__chatlist_fNameAndMessage {
+  width: 79%;
+  float: left;
+}
 .cems__chatlist__content p {
   margin: 0px;
   font-size: 13px;
@@ -271,6 +296,10 @@ div#cems__chatlist__header {
   white-space: nowrap;
   line-height: 20px;
   color: rgba(20, 20, 20, 0.6);
+}
+.cems__chatlist__time p{
+  width: 100%;
+  font-size: 11px;
 }
 div#cems__chatlist__header h3 {
   padding: 22px 22px;
@@ -296,10 +325,15 @@ p.cems__no_found {
   align-items: center;
   padding: 12px 10px;
   cursor: pointer;
-  margin: 0px 21px;
+  margin: 0px 13px;
 }
 .unseen__message h4 {
-  color: red !important;
+  color: rgb(0, 0, 0) !important;
+  font-weight: 900;
+}
+.unseen__message p {
+  color: rgb(0, 0, 0) !important;
+  font-weight: 700;
 }
 .cems__friend__icon {
   background: #a7baff;
@@ -313,6 +347,9 @@ p.cems__no_found {
   display: flex;
   margin: -4px 15px 2px -6px;
 }
+.cems__chatbox__content--header {
+  margin-left: 13px;
+}
 .cems__chatHead__friend__icon {
   background: #a7baff;
   text-align: center;
@@ -322,12 +359,21 @@ p.cems__no_found {
   justify-content: center;
   align-items: center;
   display: flex;
-  margin: 0px 9px 2px 0px;
   color: #fcf2f2;
   font-weight: 700;
   font-size: 20px;
+  position: relative;
 }
-.cems__friend__icon p {
+div#cems__onlineOrOfflineIcon {
+  width: 10px;
+  height: 10px;
+  position: absolute;
+  background: #009688;
+  border-radius: 50%;
+  bottom: 0;
+  right: 2px;
+}
+.cems__friend__icon h3 {
   font-weight: 700;
   font-size: 20px;
   color: #fcf2f2;

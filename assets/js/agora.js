@@ -91,19 +91,16 @@ class agoraFuntionality {
       .sendMessageToPeer({ text: message.text }, peerId.toString())
       .then((sendResult) => {
         if (sendResult.hasPeerReceived) {
-          document
-            .getElementById("cems__log")
-            .appendChild(document.createElement("div"))
-            .append("Message has been received by: " + peerId + " Message: " + message.text);
+          console.log('message recived')
         } else {
-          document
-            .getElementById("cems__log")
-            .appendChild(document.createElement("div"))
-            .append("Message sent to: " + peerId + " Message: " + message.text);
+          console.log('message send')
         }
       });
   }
-
+    async checkPeerOnlineStatus(peerId){
+      // await this.rtmClient.queryPeersOnlineStatus('dsff')
+      // .then(res=>console.log(res))
+    }
   peerMessageRecive() {
     this.rtmClient.on("MessageFromPeer", function (message, peerId, proper) {
       let withOutUnreadMessageId = unreadMessageId.filter((id) => id != peerId);
@@ -351,8 +348,11 @@ let screenshare = () => {
   }
   screenShare = !screenShare;
 };
-let createRecivedMessageOutput = (message, peerId) => {
+let createRecivedMessageOutput = (message, peerId,time) => {
   let createMessageOutput = document.createElement("div");
+  let createTimeOutput = document.createElement("div");
+    createTimeOutput.className = "cems__messages__time-visitor";
+    createTimeOutput.innerHTML = `${time}`;
   if (message.substring(0, 27) === "FiLe-https://tradazine.com/") {
     let fileExtention = message.split(".").pop().toLowerCase();
     let fileLink = message.slice(5, message.length);
@@ -371,7 +371,7 @@ let createRecivedMessageOutput = (message, peerId) => {
           <a href="${fileLink}" download target="_blank">${fileName}</a>
       </a>`;
     }
-    document.getElementById("cems__chatbox__messages").appendChild(createMessageOutput);
+
   } else {
   
   createMessageOutput.className = "cems__messages__item cems__messages__item--visitor";
@@ -383,6 +383,7 @@ let createRecivedMessageOutput = (message, peerId) => {
     if (isClass != undefined) {
       unreadMessageId = unreadMessageId.filter((uid) => uid != peerId);
       isClass.appendChild(createMessageOutput);
+      isClass.appendChild(createTimeOutput);
     }
   }
 };
@@ -504,11 +505,12 @@ let incomingCallOutput = (name, type) => {
 };
 
 let reciveMessageStoreAndOutput = (message, peerId) => {
+  let currentDateTime=getCurrentDateTime()
   let peerDetails = friendList.find((d) => d.id == peerId);
-  chatListDataStore(message, peerId, peerDetails.name, "recive");
+  chatListDataStore(message, peerId, peerDetails.name, "recive",currentDateTime);
 
   newChatListStore(message, peerId, peerDetails.name, "recive");
-  createRecivedMessageOutput(message.text, peerId);
+  createRecivedMessageOutput(message.text, peerId,currentDateTime);
   scrollBottom();
   gotoChatList();
   var chatEl = document.getElementById("cems__chatbox__messages");

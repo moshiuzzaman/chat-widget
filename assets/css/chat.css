@@ -39,9 +39,9 @@
     transition: transform .3s;
     width: 40px;
 }
-.cems__chatbox__button:hover img {
+/* .cems__chatbox__button:hover img {
     transform: rotate(22deg);
-}
+} */
 
 /* HEADER */
 .cems__chatbox__header {

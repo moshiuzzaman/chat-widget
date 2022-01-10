@@ -1,6 +1,6 @@
-console.log('CB');
+console.log("CB");
 class InteractiveChatbox {
-  constructor(chatToggleButton,  chatbox, icons,  chatSection, chatList) {
+  constructor(chatToggleButton, chatbox, icons, chatSection, chatList) {
     this.args = {
       chatToggleButton: chatToggleButton,
       chatbox: chatbox,
@@ -13,7 +13,7 @@ class InteractiveChatbox {
   }
 
   display() {
-    const { chatToggleButton, chatbox,} = this.args;
+    const { chatToggleButton, chatbox } = this.args;
     chatToggleButton.addEventListener("click", () => this.toggleState(chatbox));
   }
 
@@ -47,7 +47,7 @@ class InteractiveChatbox {
       chatSection.classList.remove("cems__hide__section");
       chatList.classList.add("cems__hide__section");
       var chatEl = document.getElementById("cems__chatbox__messages");
-      chatEl.scrollTop = chatEl.scrollHeight
+      chatEl.scrollTop = chatEl.scrollHeight;
     }
   }
   backTochatList() {
@@ -65,40 +65,30 @@ const chatList = document.getElementById("cems__chatbox__chatlists");
 const chatSection = document.getElementById("cems__chatbox__chatting");
 
 const icons = {
-  isClicked: '<img src="./images/icons/chatbox-icon2.svg" />',
-  isNotClicked: '<img src="./images/icons/chatbox-icon.svg" />',
+  isClicked: '<img src="https://img.icons8.com/material/96/ffffff/expand-arrow--v1.png"/>',
+  isNotClicked: '<img src="https://img.icons8.com/fluency-systems-regular/96/ffffff/chat.png"/>',
 };
-const chatbox = new InteractiveChatbox(
-  chatToggleButton,
-  chatContent,
-  icons,
-  chatSection,
-  chatList
-);
+const chatbox = new InteractiveChatbox(chatToggleButton, chatContent, icons, chatSection, chatList);
 chatbox.display();
 chatbox.toggleIcon(false, chatToggleButton);
 
-
-appId = "9726a69c2bd448108598e9e5a3d7e0d4"
-      let getAuthToken=async(email,pass)=>{
-          try {
-            const response = await axios.post(
-              `https://tradazine.com/api/v1/login?username=user3@gmail.com&password=123456`
-              // `https://tradazine.com/api/v1/login?username=hamidur@cems.com&password=123456`
-            );
-            let res={
-              token:response.data.access_token,
-              uid:response.data.chat_uid,
-              name:response.data.name
-            }
-            allDetails.access_token=response.data.access_token
-              return await res
-          } catch (error) {
-            console.error(error);
-          }
-        }
-        let login=async()=>{
-          let authData= await getAuthToken()
-          await agoraFunction.init(authData.uid,authData.name,appId,authData.token)
-        }
-         login()
+let getAuthToken = async (email, pass) => {
+  try {
+    const response = await axios.post(
+      `https://tradazine.com/api/v1/login?username=${email}&password=${pass}`
+    );
+    let res = {
+      token: response.data.access_token,
+      uid: response.data.chat_uid,
+      name: response.data.name,
+    };
+    allDetails.access_token = response.data.access_token;
+    return await res;
+  } catch (error) {
+    console.error(error);
+  }
+};
+let cemsChatInit = async (email, pass, appId) => {
+  let authData = await getAuthToken(email, pass);
+  await agoraFunction.init(authData.uid, authData.name, appId, authData.token);
+};

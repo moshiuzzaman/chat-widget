@@ -32,7 +32,7 @@ document.getElementById('cems__root').innerHTML+=`
     <div id="cems__chatbox__chatting" class="cems__hide__section">
       <div class="cems__chatbox__header">
         <div id="cems__chatbox_backButton--header" onclick=backToChatList()>
-          <img src="./images/icons/backArrow.svg" alt="" />
+          <img src="https://img.icons8.com/ios-filled/100/000000/left.png"/>
         </div>
         <div class="cems__friend__icon">
           <p>F</p>
@@ -51,7 +51,7 @@ document.getElementById('cems__root').innerHTML+=`
         </div>
       </div>
       <div class="cems__chatbox__footer">
-        <img src="./images/icons/attachment.svg" alt="" />
+        <img src="https://img.icons8.com/external-kmg-design-outline-color-kmg-design/64/000000/external-attachment-user-interface-kmg-design-outline-color-kmg-design.png"/>
         <input type="text" placeholder="Write a message..." />
         <button class="cems__chatbox__send--footer">Send</button>
       </div>

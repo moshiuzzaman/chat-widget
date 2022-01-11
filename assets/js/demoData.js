@@ -114,7 +114,6 @@ let fetchData = (uid, allMessage = []) => {
   });
 
   let data = JSON.parse(localStorage.getItem(`CemsChatDataFor${uid}`));
-  console.log(data);
   if (data === null) {
     // friendList=[]
     // chatListData=[]
@@ -133,7 +132,6 @@ let addchangeUser = (uid) => {
     let withoutData = chatListData.filter((data) => data.id !== uid);
     let alData = chatListData.find((data) => data.id == "243");
     chatListData = withoutData;
-    console.log(alData);
     if (alData === undefined) {
       chatListData.push({
         name: "user4",
@@ -202,4 +200,3 @@ let getCurrentDateTime = () => {
   return currentDateTime
 };
 
-console.log("DD");

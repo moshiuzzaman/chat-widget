@@ -1,4 +1,4 @@
-console.log("CB");
+
 class InteractiveChatbox {
   constructor(chatToggleButton, chatbox, icons, chatSection, chatList) {
     this.args = {

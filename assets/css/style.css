@@ -48,13 +48,14 @@ body {
 
 .cems__chatbox__support {
   background: #f9f9f9;
-  height: 430px;
+  height: 438px;
   width: 390px;
   box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.1);
   border-radius: 20px;
   position: fixed;
   right: 32px;
-  bottom: 79px;
+  bottom: 70px;
+  overflow: hidden;
 }
 
 /* HEADER */
@@ -139,25 +140,31 @@ body {
 }
 .cems__messages__time-operator {
   margin-left: auto;
-  font-size: 10px;
-  margin-top: 3px;
+    font-size: 7px;
+    margin-top: 4px;
+    color: gray;
 }
 .cems__messages__time-visitor {
-  font-size: 10px;
-  margin-top: 3px;
+  font-size: 7px;
+  margin-top: 4px;
+  color: gray;
 }
 /* FOOTER */
 .cems__chatbox__footer,
-.cems__chatbox__chatlist__footer {
+.cems__chatbox__chatlist__footer,
+ .cems__chatbox__footer_inmessage{
   display: flex;
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
   padding: 10px 10px;
-  background: var(--secondaryGradient);
-  /* box-shadow: var(--secondaryBoxShadow); */
+  background: white;
   border-bottom-right-radius: 10px;
   border-bottom-left-radius: 10px;
+  z-index: 99999999999;
+}
+.cems__chatbox__footer_inmessage{
+  padding: 13px 10px;
 }
 .cems__chatbox__chatlist__footer {
   justify-content: space-around;
@@ -183,11 +190,12 @@ body {
   width: 25px;
   margin-bottom: -6px;
 }
-.cems__chatbox__footer img {
+.cems__chatbox__footer img,
+.cems__chatbox__footer_inmessage img {
   width: 23px;
   cursor: pointer;
 }
-.cems__chatbox__footer input {
+.cems__chatbox__footer_inmessage input {
   border: none;
   padding: 10px 10px;
   border-radius: 30px;
@@ -262,6 +270,24 @@ div#cems__chatbox__chatting {
   height: 430px;
   width: 390px;
   border-radius: 38px;
+}
+div#cems__inputfileOutput {
+  width: 100%;
+    height: 49px;
+    background: #03a9f4;
+    position: absolute;
+    bottom: -8px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 13px;
+    z-index: 99999999998;
+    transition: all .3s;
+    color:#ffffff;
+}
+div#cems__inputfileOutput img {
+  width: 28px;
+  cursor: pointer;
 }
 .cems__hide__section {
   display: none !important;
@@ -368,10 +394,15 @@ div#cems__onlineOrOfflineIcon {
   width: 10px;
   height: 10px;
   position: absolute;
-  background: #009688;
   border-radius: 50%;
   bottom: 0;
   right: 2px;
+}
+.cems__onlineIcon{
+  background: #009688;
+}
+.cems__offlineIcon{
+  background: #ababab;
 }
 .cems__friend__icon h3 {
   font-weight: 700;

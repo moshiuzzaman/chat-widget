@@ -46,15 +46,13 @@ let chatsToggle = (data) => {
   if (isUnread != undefined) {
     setclass = "unseen__message";
   }
-  let timeStamp=''
-  console.log(lastMessageDetails)
-  if(lastMessageDetails!==undefined){
-     if(lastMessageDetails.timeStamp!==null){
-    console.log('object')
-    timeStamp=lastMessageDetails.timeStamp.split("|")[1]
+  let timeStamp = "";
+  if (lastMessageDetails !== undefined) {
+    if (lastMessageDetails.timeStamp !== null) {
+      timeStamp = lastMessageDetails.timeStamp.split("|")[1];
+    }
   }
-  }
- 
+
   let element = `
     <div class="cems__chat__list ${setclass}" id='${data.id}' onclick={showMesseges(this.id)}>
       <div class="cems__friend__icon">
@@ -100,20 +98,36 @@ let gotoUsers = () => {
 async function showMesseges(id) {
   inMessages = true;
   let exactData = chatListData.find((data) => data.id == id);
-  console.log(exactData);
   if (exactData == undefined) {
     exactData = friendList.find((data) => data.id == id);
-
     exactData.messages = [];
   }
   calleeId = exactData.id;
   unreadMessageId = unreadMessageId.filter((id) => id != exactData.id);
   calleeName = exactData.name;
+
   chatboxChattingDiv.innerHTML = chatboxChating(exactData);
-  await agoraFunction.checkPeerOnlineStatus(exactData.id)
   chatbox.gotoChat();
-  scrollBottom();
   filesend();
+  let onlineStatus = await agoraFunction.checkPeerOnlineStatus(exactData.id);
+  let onlineOrOflineIcon = document.getElementById("cems__onlineOrOfflineIcon");
+  let onlineOrOflineText = document.getElementById("cems__onlineOrOfflineText");
+  if (onlineStatus) {
+    onlineOrOflineIcon.classList.remove("cems__offlineIcon");
+    onlineOrOflineIcon.classList.add("cems__onlineIcon");
+    onlineOrOflineText.classList.remove("cems__offlineText");
+    onlineOrOflineText.classList.add("cems__onlineText");
+    onlineOrOflineText.innerText = "Online";
+  } else {
+    onlineOrOflineIcon.classList.add("cems__offlineIcon");
+    onlineOrOflineIcon.classList.remove("cems__onlineIcon");
+    onlineOrOflineText.classList.add("cems__offlineText");
+    onlineOrOflineText.classList.remove("cems__onlineText");
+    onlineOrOflineText.innerText = "Offline";
+  }
+  if (exactData.messages.length) {
+    controlSentOrReciveMessage(exactData);
+  }
 }
 
 let backToChatList = () => {
@@ -184,6 +198,8 @@ let controlSentOrReciveMessage = (data) => {
       }
     }
   });
+  document.getElementById("cems__chatbox__messages").innerHTML = chatboxMessages.innerHTML;
+  scrollBottom();
   return chatboxMessages.innerHTML;
 };
 
@@ -220,9 +236,7 @@ let createMessageOutput = (message, time) => {
 };
 let sendMessage = async (id, message = null) => {
   let currentDateTime = getCurrentDateTime();
-  console.log(currentDateTime);
   if (selectFile !== undefined) {
-    console.log("object2");
     document.getElementById("sendMessageBtn").disabled = true;
     let formData = new FormData();
     formData.append("file", selectFile);
@@ -247,9 +261,9 @@ let sendMessage = async (id, message = null) => {
 
     if (sendFile.errors) {
       alert(sendFile.errors.file[0]);
+      cancelFileSend();
       return;
     }
-    console.log(sendFile.data.path);
     message = {
       text: `FiLe-https://tradazine.com/${sendFile.data.path}`,
       type: "TEXT",
@@ -270,7 +284,6 @@ let sendMessage = async (id, message = null) => {
   if (message.text.length == 0) {
     alert("write something");
   } else {
-    console.log(message);
     let exactMessagesData = chatListDataStore(
       message,
       id,
@@ -280,7 +293,7 @@ let sendMessage = async (id, message = null) => {
     );
 
     newChatListStore(message, id, allDetails.userName, "sent");
-
+    cancelFileSend();
     createMessageOutput(message.text, currentDateTime);
     var chatEl = document.getElementById("cems__chatbox__messages");
     chatEl.scrollTop = chatEl.scrollHeight;
@@ -288,27 +301,28 @@ let sendMessage = async (id, message = null) => {
   }
 };
 let filesend = () => {
-  console.log(clickFriendId);
   document.getElementById("cems_file_upload").addEventListener("change", function (e) {
     selectFile = e.target.files[0];
-    console.log(selectFile);
     if (selectFile === undefined) {
       document.getElementById(
         "cems_send_message"
       ).innerHTML = `<input id="cems__input__message" type="text" placeholder="Write a message..." autocomplete="off"/>`;
     } else {
       let fileName = e.target.files[0].name;
+      let fileExtention = fileName.split(".").pop().toLowerCase();
       if (fileName.length > 30) {
-        fileName = fileName.substring(0, 30) + "...";
+        fileName = fileName.substring(0, 30) + "..." + fileExtention;
       }
-      let filedata = `
-      <div id="selectFileShow">
-      <p>${fileName}</p>
-      </div>
-      `;
-      document.getElementById("cems_send_message").innerHTML = filedata;
+      document.getElementById("cems__inputfileOutputText").innerHTML = fileName;
+      document.getElementById("cems__inputfileOutput").style.bottom = "61px";
     }
   });
+};
+let cancelFileSend = () => {
+  console.log("object");
+  selectFile = undefined;
+  document.getElementById("cems__inputfileOutput").style.bottom = "-8px";
+  document.getElementById("cems_file_upload").value = "";
 };
 
 let chatListDataStore = (message, id, name, type, time) => {
@@ -390,7 +404,7 @@ let chatboxChating = (data) => {
     </div>
     <div class="cems__chatHead__friend__icon">
       <p>${data.name.toUpperCase().charAt(0)}</p>
-      <div id='cems__onlineOrOfflineIcon' class='cems__onlineIcon'></div>
+      <div id='cems__onlineOrOfflineIcon' class='cems__offlineIcon'></div>
     </div>
     <div class="cems__chatbox__content--header">
       <h4 class="cems__chatbox__heading--header">${data.name}</h4>
@@ -406,10 +420,16 @@ let chatboxChating = (data) => {
   ${
     !data.messages.length
       ? `<p class="cems__no_found">No message found</p>`
-      : controlSentOrReciveMessage(data)
+      : `<p class="cems__no_found">Loading....</p>`
   }
 </div>
-<div class="cems__chatbox__footer">
+<div id="cems__inputfileOutput" >
+  <p id="cems__inputfileOutputText">
+  cems_file_upload.png
+  </p>
+  <img src="https://img.icons8.com/material-outlined/96/ffffff/cancel--v1.png" onclick=cancelFileSend()>
+</div>
+<div class="cems__chatbox__footer_inmessage">
 <label for="cems_file_upload"><img src="https://img.icons8.com/external-kmg-design-outline-color-kmg-design/64/000000/external-attachment-user-interface-kmg-design-outline-color-kmg-design.png"/></label>
 
 <input type="file" id="cems_file_upload" name="cems_file_upload" style="display:none;">

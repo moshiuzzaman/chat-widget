@@ -60,6 +60,7 @@ class agoraFuntionality {
       });
   }
   init(uid, name, appId, access_token) {
+    console.log(uid, name, appId, access_token)
     this.login(uid.toString(), name, appId, access_token);
   }
   async createAgoraRtmToken(userName) {
@@ -98,8 +99,10 @@ class agoraFuntionality {
       });
   }
     async checkPeerOnlineStatus(peerId){
-      // await this.rtmClient.queryPeersOnlineStatus('dsff')
-      // .then(res=>console.log(res))
+    return   await this.rtmClient.queryPeersOnlineStatus([peerId.toString()])
+      .then(res=>{
+        return res[peerId.toString()]
+      })
     }
   peerMessageRecive() {
     this.rtmClient.on("MessageFromPeer", function (message, peerId, proper) {
@@ -132,7 +135,6 @@ class agoraFuntionality {
     this.sections.getModalSection.style.display = "flex";
     sendMessage(calleeId, { text: `You gave ${calleeName} a ${type} call `, type: "call" });
     this.rtcToken = await this.createAgoraRtcToken();
-    console.log(this.rtcToken);
     this.joinReciveCallReciver(type);
   };
 
@@ -258,7 +260,6 @@ class agoraFuntionality {
     });
   }
   async joinReciveCallSender(type) {
-    console.log(this.appId, this.channelId, this.rtcToken, this.uid);
     await this.rtcClient.join(this.appId, this.channelId, this.rtcToken, this.uid);
     this.localTracks.localAudioTrack = await AgoraRTC.createMicrophoneAudioTrack();
     if (type == "video") {
@@ -297,11 +298,9 @@ class agoraFuntionality {
     })
   }
   async screenshareOff() {
-    console.log(this.localTracks)
       this.rtcClient.unpublish([this.localTracks.screenVideoTrack]);
       this.localTracks.screenVideoTrack.close();
       this.localTracks.localVideoTrack = await AgoraRTC.createCameraVideoTrack();
-    console.log(this.localTracks)
         await this.rtcClient.publish([this.localTracks.localVideoTrack]);
     const mycon = document.getElementById("cems__call__sender");
         this.localTracks.localVideoTrack.play(mycon);
@@ -398,7 +397,6 @@ let mutecontrol = () => {
     agoraFunction.muteAudio();
     getMuteButton.innerHTML = `<svg class="cems__cancleBtn"   onclick=mutecontrol() xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="90" height="90" viewBox="0 0 172 172" style=" fill:#000000;"><g fill="none" fill-rule="nonzero" stroke="none" stroke-width="1" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="10" stroke-dasharray="" stroke-dashoffset="0" font-family="none" font-weight="none" font-size="none" text-anchor="none" style="mix-blend-mode: normal"><path d="M0,172v-172h172v172z" fill="none"></path><path d="M86,172c-47.49649,0 -86,-38.50351 -86,-86v0c0,-47.49649 38.50351,-86 86,-86v0c47.49649,0 86,38.50351 86,86v0c0,47.49649 -38.50351,86 -86,86z" fill="#2ecc71"></path><g fill="#ffffff"><path d="M25.02958,18.54375l-6.48583,6.48583l128.42667,128.42667l6.48583,-6.48583l-38.34167,-38.34167c1.90629,-4.09492 2.99208,-8.64437 2.99208,-13.45542v-18.34667c0,-2.53643 -2.05024,-4.58667 -4.58667,-4.58667c-2.53643,0 -4.58667,2.05024 -4.58667,4.58667v18.34667c0,2.19677 -0.40004,4.27979 -0.99438,6.27979l-8.17896,-8.17896v-53.14084c0,-7.60011 -6.15989,-13.76 -13.76,-13.76c-7.60011,0 -13.76,6.15989 -13.76,13.76v25.62084zM54.92354,74.04958c-0.60544,0.77515 -1.03021,1.71298 -1.03021,2.77708v18.34667c0,16.14048 11.98955,29.50108 27.52,31.73938v9.54062h-13.76c-2.53643,0 -4.58667,2.05024 -4.58667,4.58667c0,2.53643 2.05024,4.58667 4.58667,4.58667h36.69333c2.53643,0 4.58667,-2.05024 4.58667,-4.58667c0,-2.53643 -2.05024,-4.58667 -4.58667,-4.58667h-13.76v-9.54062c4.55915,-0.65589 8.79916,-2.29161 12.53271,-4.65833l-6.74562,-6.74562c-3.12811,1.60992 -6.62186,2.59792 -10.37375,2.59792c-12.64544,0 -22.93333,-10.28789 -22.93333,-22.93333v-12.97167zM72.24,91.375v3.79833c0,7.60011 6.15989,13.76 13.76,13.76c1.16043,0 2.26818,-0.18626 3.34146,-0.45687z"></path></g></g></svg>`;
   }
-  console.log(mute);
   mute = !mute;
 };
 let videoshare=false
@@ -412,7 +410,6 @@ let videoControl=()=>{
   videoshare=!videoshare
 }
 let recivedCallOutput = (type) => {
-  console.log("mute" + mute);
   let output = `
   <div id="cems__callsection">
        
@@ -543,7 +540,6 @@ let getFriendListData = async (authToken, uid) => {
   }
 };
 
-const log = console.log.bind(console);
 if (cmsdir === "/") {
   cmsdir = "../../";
 }

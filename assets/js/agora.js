@@ -39,6 +39,7 @@ class agoraFuntionality {
     await this.rtmClient
       .login({ uid, token: this.rtmToken })
       .then(async () => {
+        console.log(uid, name)
         // let data=await getChatData(access_token,uid)
         this.peerMessageRecive();
         this.RemoteInvitationReceived();
@@ -60,23 +61,23 @@ class agoraFuntionality {
       });
   }
   init(uid, name, appId, access_token) {
-    console.log(uid, name, appId, access_token)
     this.login(uid.toString(), name, appId, access_token);
   }
   async createAgoraRtmToken(userName) {
     try {
       const response = await axios.get(
-        `https://agoratokenbs23.herokuapp.com/rtm-token?username=${userName}`
+        `http://47.241.99.15:5000/token/?username=${userName}&channelName=${userName}`
       );
-      return await response.data.token;
+      return await response.data.rtmToken;
     } catch (error) {
       console.error(error);
     }
   }
-  async createAgoraRtcToken() {
+  async createAgoraRtcToken(id) {
+    this.callid=id
     try {
       const response = await axios.get(
-        `https://agoratokenbs23.herokuapp.com/rtc-uid-token?channelName=${this.channelId}&uid=${this.uid}`
+        `http://47.241.99.15:5000/rtc-uid-token/?uid=${id}&channelName=${this.channelId}`
       );
       return await response.data.token;
     } catch (error) {
@@ -121,8 +122,8 @@ class agoraFuntionality {
     this.localInvitation = this.rtmClient.createLocalInvitation(calleeId.toString());
 
     this.localInvitationEvents();
-    this.channelId = this.uid + calleeId;
-    this.localInvitation._channelId = this.uid + calleeId;
+    this.channelId = this.uid 
+    this.localInvitation._channelId = this.uid 
     this.localInvitation._content = {
       name: this.userName,
       type: type,
@@ -134,7 +135,7 @@ class agoraFuntionality {
     this.status = "busy";
     this.sections.getModalSection.style.display = "flex";
     sendMessage(calleeId, { text: `You gave ${calleeName} a ${type} call `, type: "call" });
-    this.rtcToken = await this.createAgoraRtcToken();
+    this.rtcToken = await this.createAgoraRtcToken(1);
     this.joinReciveCallReciver(type);
   };
 
@@ -180,7 +181,7 @@ class agoraFuntionality {
       }
       this.remoteInvitation = remoteInvitation;
       this.channelId = remoteInvitation._channelId;
-      this.rtcToken = await this.createAgoraRtcToken();
+      this.rtcToken = await this.createAgoraRtcToken(2);
       incomingCallOutput(remoteInvitation._content.name, remoteInvitation._content.type);
       this.calltype = remoteInvitation._content.type;
       this.sections.getCallingType = document.getElementById("callingType");
@@ -224,8 +225,10 @@ class agoraFuntionality {
   // **********audio video *************
 
   async joinReciveCallReciver(type) {
+    
     this.rtcClient = AgoraRTC.createClient({ mode: "rtc", codec: "vp8" });
     this.rtcClient.on("user-published", async (user, mediaType) => {
+      console.log(user)
       await this.rtcClient.subscribe(user, mediaType);
       console.log("subscribe success");
       if (type == "video") {
@@ -260,7 +263,7 @@ class agoraFuntionality {
     });
   }
   async joinReciveCallSender(type) {
-    await this.rtcClient.join(this.appId, this.channelId, this.rtcToken, this.uid);
+    await this.rtcClient.join(this.appId, this.channelId, this.rtcToken, this.callid);
     this.localTracks.localAudioTrack = await AgoraRTC.createMicrophoneAudioTrack();
     if (type == "video") {
       this.localTracks.localVideoTrack = await AgoraRTC.createCameraVideoTrack();
@@ -302,7 +305,7 @@ class agoraFuntionality {
       this.localTracks.screenVideoTrack.close();
       this.localTracks.localVideoTrack = await AgoraRTC.createCameraVideoTrack();
         await this.rtcClient.publish([this.localTracks.localVideoTrack]);
-    const mycon = document.getElementById("cems__call__sender");
+    const mycon = document.getElementById("cems__call__sender")
         this.localTracks.localVideoTrack.play(mycon);
         
   }
@@ -503,7 +506,8 @@ let incomingCallOutput = (name, type) => {
 
 let reciveMessageStoreAndOutput = (message, peerId) => {
   let currentDateTime=getCurrentDateTime()
-  let peerDetails = friendList.find((d) => d.id == peerId);
+  console.log(message, peerId)
+  let peerDetails = friendList.find((d) => d.chat_uid == peerId);
   chatListDataStore(message, peerId, peerDetails.name, "recive",currentDateTime);
 
   newChatListStore(message, peerId, peerDetails.name, "recive");
@@ -540,6 +544,3 @@ let getFriendListData = async (authToken, uid) => {
   }
 };
 
-if (cmsdir === "/") {
-  cmsdir = "../../";
-}

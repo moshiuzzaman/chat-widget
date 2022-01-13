@@ -92,3 +92,9 @@ let cemsChatInit = async (email, pass, appId) => {
   let authData = await getAuthToken(email, pass);
   await agoraFunction.init(authData.uid, authData.name, appId, authData.token);
 };
+let chatInitWithUid=(id)=>{
+   const chatContent = document.querySelector(".cems__chatbox__support");
+  chatbox.toggleState(chatContent)
+  inMessages=!inMessages
+  showMesseges(id.toString())
+}

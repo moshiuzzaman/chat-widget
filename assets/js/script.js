@@ -99,7 +99,7 @@ async function showMesseges(id) {
   inMessages = true;
   let exactData = chatListData.find((data) => data.id == id);
   if (exactData == undefined) {
-    exactData = friendList.find((data) => data.id == id);
+    exactData = friendList.find((data) => data.chat_uid == id);
     exactData.messages = [];
   }
   calleeId = exactData.id;
@@ -235,6 +235,7 @@ let createMessageOutput = (message, time) => {
   }
 };
 let sendMessage = async (id, message = null) => {
+  console.log(id)
   let currentDateTime = getCurrentDateTime();
   if (selectFile !== undefined) {
     document.getElementById("sendMessageBtn").disabled = true;
@@ -335,7 +336,7 @@ let chatListDataStore = (message, id, name, type, time) => {
 
   let exactMessagesData = chatListData.find((d) => d.id == id);
   if (exactMessagesData == undefined) {
-    exactMessagesData = friendList.find((data) => data.id == id);
+    exactMessagesData = friendList.find((data) => data.chat_uid == id);
     exactMessagesData.messages = [
       {
         messageType: messageType,
@@ -369,9 +370,11 @@ let newChatListStore = (message, id, name, type, time) => {
     messageType = 3;
   }
 
-  let exactMessagesData = newChatList.find((d) => d.id == id);
+  let exactMessagesData = newChatList.find((d) => d.chat_uid == id);
   if (exactMessagesData == undefined) {
-    exactMessagesData = friendList.find((data) => data.id == id);
+    console.log(friendList)
+    exactMessagesData = friendList.find((data) => data.chat_uid == id);
+
     exactMessagesData.messages = [
       {
         messageType: messageType,
@@ -437,9 +440,11 @@ let chatboxChating = (data) => {
   <div id="cems_send_message">
   <input id="cems__input__message" type="text" placeholder="Write a message..." autocomplete="off"/>
   </div>
-  <button id="sendMessageBtn" class="cems__chatbox__send--footer" onclick=sendMessage('${
+  <div id="sendMessageBtn" class="cems__chatbox__send--footer" >
+  <img src="https://img.icons8.com/material/96/03a9f4/filled-sent.png" onclick=sendMessage('${
     data.id
-  }')>Send</button>
+  }')> 
+  </div>
   
 </div>
   `;

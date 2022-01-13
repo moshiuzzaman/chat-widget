@@ -8,9 +8,6 @@ let options = {
   channel: "143142",
   uid: 143,
 };
-let cmsloc = window.location.pathname;
-let cmsdir = cmsloc.substring(1, cmsloc.lastIndexOf("/"));
-console.log(cmsdir);
 let allDetails = {
   userName: "",
   userId: "",
@@ -20,7 +17,7 @@ let newChatList = [];
 let chatListData = [
   {
     name: "Zarif",
-    id: 234,
+    id: 'vexpo-234',
     messages: [
       {
         messageType: 3,
@@ -38,7 +35,7 @@ let chatListData = [
   },
   {
     name: "Raj",
-    id: 235,
+    id: 'vexpo-235',
     messages: [],
   },
 ];
@@ -71,7 +68,7 @@ let friendList = [
 ];
 
 window.addEventListener("beforeunload", function (e) {
-  localStorage.setItem(`CemsChatDataFor${allDetails.userId}`, JSON.stringify(chatListData));
+  // localStorage.setItem(`CemsChatDataFor${allDetails.userId}`, JSON.stringify(chatListData));
 });
 
 //   window.onbeforeunload = function(e) {
@@ -128,25 +125,25 @@ let fetchData = (uid, allMessage = []) => {
   addchangeUser(uid);
 };
 let addchangeUser = (uid) => {
-  if (uid === "242") {
+  if (uid === "vexpo-242") {
     let withoutData = chatListData.filter((data) => data.id !== uid);
-    let alData = chatListData.find((data) => data.id == "243");
+    let alData = chatListData.find((data) => data.id == "vexpo-243");
     chatListData = withoutData;
     if (alData === undefined) {
       chatListData.push({
         name: "user4",
-        id: "243",
+        id: "vexpo-243",
         messages: [],
       });
     }
   } else {
     let withoutData = chatListData.filter((data) => data.id != uid);
-    let alData = chatListData.find((data) => data.id == "242");
+    let alData = chatListData.find((data) => data.id == "vexpo-242");
     chatListData = withoutData;
     if (alData === undefined) {
       chatListData.push({
         name: "User3",
-        id: "242",
+        id: "vexpo-242",
         messages: [],
       });
     }

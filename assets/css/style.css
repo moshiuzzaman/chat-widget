@@ -45,7 +45,9 @@ body {
 ::-webkit-scrollbar-thumb:hover {
   background: rgb(177, 174, 174); 
 }
-
+.cems__chatbox__support p{
+  margin-bottom: 0;
+}
 .cems__chatbox__support {
   background: #f9f9f9;
   height: 438px;
@@ -197,11 +199,12 @@ body {
 }
 .cems__chatbox__footer_inmessage input {
   border: none;
-  padding: 10px 10px;
+  padding: 11px 10px;
   border-radius: 30px;
-  width: 90%;
+  width: 94%;
   margin: 0px 10px;
   border: 1px solid #dfdbdb;
+  font-size: 12px;
 }
 input#cems__input__message:focus-visible {
   outline: none;
@@ -217,16 +220,22 @@ div#selectFileShow {
   border: 1px solid #dfdbdb;
   font-size: 12px;
 }
+div#sendMessageBtn img {
+  width: 31px;
+}
 .cems__chatbox__send--footer {
   color: white;
-  background: #0998f5;
-  border: none;
-  width: 61px;
-  height: 37px;
-  cursor: pointer;
-  position: absolute;
-  right: 19px;
-  border-radius: 0 27px 25px 0;
+    border: none;
+    width: 61px;
+    height: 37px;
+    cursor: pointer;
+    position: absolute;
+    right: 19px;
+    border-radius: 0 27px 25px 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transform: rotate(45deg);
 }
 
 .cems__chatbox__button button,
@@ -246,6 +255,7 @@ div#selectFileShow {
   font-size: 15px;
   font-weight: 600;
   line-height: 22px;
+  margin: 0;
 }
 p.cems__onlineText {
   font-size: 10px;

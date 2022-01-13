@@ -9,7 +9,7 @@ let scrollBottom = () => {
 };
 let usersToggle = (data) => {
   let element = `
-    <div class="cems__chat__list" id='${data.id}' onclick={showMesseges(this.id)}>
+    <div class="cems__chat__list" id='${data.chat_uid}' onclick={showMesseges(this.id)}>
     <div class="cems__friend__icon">
       <p>${data.name.toUpperCase().charAt(0)}</p>
     </div>
@@ -41,20 +41,21 @@ let chatsToggle = (data) => {
     }
   }
 
-  let isUnread = unreadMessageId.find((id) => id == data.id);
+  let isUnread = unreadMessageId.find((id) => id == data.chat_uid);
   let setclass = "";
   if (isUnread != undefined) {
     setclass = "unseen__message";
   }
   let timeStamp = "";
   if (lastMessageDetails !== undefined) {
-    if (lastMessageDetails.timeStamp !== null) {
+    console.log(lastMessageDetails);
+    if (lastMessageDetails.timeStamp !== null && lastMessageDetails.timeStamp !== undefined) {
       timeStamp = lastMessageDetails.timeStamp.split("|")[1];
     }
   }
 
   let element = `
-    <div class="cems__chat__list ${setclass}" id='${data.id}' onclick={showMesseges(this.id)}>
+    <div class="cems__chat__list ${setclass}" id='${data.chat_uid}' onclick={showMesseges(this.id)}>
       <div class="cems__friend__icon">
         <h3>${data.name.toUpperCase().charAt(0)}</h3>
       </div>
@@ -97,19 +98,19 @@ let gotoUsers = () => {
 };
 async function showMesseges(id) {
   inMessages = true;
-  let exactData = chatListData.find((data) => data.id == id);
+  let exactData = chatListData.find((data) => data.chat_uid == id);
   if (exactData == undefined) {
     exactData = friendList.find((data) => data.chat_uid == id);
     exactData.messages = [];
   }
-  calleeId = exactData.id;
-  unreadMessageId = unreadMessageId.filter((id) => id != exactData.id);
+  calleeId = exactData.chat_uid;
+  unreadMessageId = unreadMessageId.filter((id) => id != exactData.chat_uid);
   calleeName = exactData.name;
 
   chatboxChattingDiv.innerHTML = chatboxChating(exactData);
   chatbox.gotoChat();
   filesend();
-  let onlineStatus = await agoraFunction.checkPeerOnlineStatus(exactData.id);
+  let onlineStatus = await agoraFunction.checkPeerOnlineStatus(exactData.chat_uid);
   let onlineOrOflineIcon = document.getElementById("cems__onlineOrOfflineIcon");
   let onlineOrOflineText = document.getElementById("cems__onlineOrOfflineText");
   if (onlineStatus) {
@@ -235,7 +236,7 @@ let createMessageOutput = (message, time) => {
   }
 };
 let sendMessage = async (id, message = null) => {
-  console.log(id)
+  console.log(id);
   let currentDateTime = getCurrentDateTime();
   if (selectFile !== undefined) {
     document.getElementById("sendMessageBtn").disabled = true;
@@ -292,13 +293,12 @@ let sendMessage = async (id, message = null) => {
       "sent",
       currentDateTime
     );
-
-    newChatListStore(message, id, allDetails.userName, "sent");
+    
     cancelFileSend();
     createMessageOutput(message.text, currentDateTime);
     var chatEl = document.getElementById("cems__chatbox__messages");
     chatEl.scrollTop = chatEl.scrollHeight;
-    await agoraFunction.sendPeerMessage(message, exactMessagesData.id);
+    await agoraFunction.sendPeerMessage(message, exactMessagesData.chat_uid);
   }
 };
 let filesend = () => {
@@ -327,6 +327,7 @@ let cancelFileSend = () => {
 };
 
 let chatListDataStore = (message, id, name, type, time) => {
+  console.log(id);
   let messageType;
   if (type == "sent") {
     messageType = 2;
@@ -334,21 +335,37 @@ let chatListDataStore = (message, id, name, type, time) => {
     messageType = 3;
   }
 
-  let exactMessagesData = chatListData.find((d) => d.id == id);
+  let exactMessagesData = chatListData.find((d) => d.chat_uid == id);
+  console.log(exactMessagesData)
   if (exactMessagesData == undefined) {
-    exactMessagesData = friendList.find((data) => data.chat_uid == id);
-    exactMessagesData.messages = [
-      {
-        messageType: messageType,
-        text: message.text,
-        timeStamp: time,
-        username: name,
-      },
-    ];
+    console.log('in undefine')
+    console.log(id);
+    exactMessagesData = friendList.find((data) => data.id == id);
+    if (exactMessagesData === undefined) {
+      exactMessagesData = friendList.find((data) => data.chat_uid == id);
+      exactMessagesData.messages = [
+        {
+          messageType: messageType,
+          text: message.text,
+          timeStamp: time,
+          username: name,
+        },
+      ];
+    } else {
+      exactMessagesData.messages = [
+        {
+          messageType: messageType,
+          text: message.text,
+          timeStamp: time,
+          username: name,
+        },
+      ];
+    }
+
     chatListData.unshift(exactMessagesData);
     document.getElementById("cems__chatbox__messages").innerHTML = "";
   } else {
-    let withoutExactMessagesData = chatListData.filter((d) => d.id != id);
+    let withoutExactMessagesData = chatListData.filter((d) => d.chat_uid != id);
     if (exactMessagesData.messages.length == 0) {
       document.getElementById("cems__chatbox__messages").innerHTML = "";
     }
@@ -360,45 +377,46 @@ let chatListDataStore = (message, id, name, type, time) => {
     });
     chatListData = [exactMessagesData, ...withoutExactMessagesData];
   }
+  console.log(chatListData)
   return exactMessagesData;
 };
-let newChatListStore = (message, id, name, type, time) => {
-  let messageType;
-  if (type == "sent") {
-    messageType = 2;
-  } else {
-    messageType = 3;
-  }
+// let newChatListStore = (message, id, name, type, time) => {
+//   let messageType;
+//   if (type == "sent") {
+//     messageType = 2;
+//   } else {
+//     messageType = 3;
+//   }
 
-  let exactMessagesData = newChatList.find((d) => d.chat_uid == id);
-  if (exactMessagesData == undefined) {
-    console.log(friendList)
-    exactMessagesData = friendList.find((data) => data.chat_uid == id);
+//   let exactMessagesData = newChatList.find((d) => d.chat_uid == id);
+//   if (exactMessagesData == undefined) {
+//     console.log(friendList)
+//     exactMessagesData = friendList.find((data) => data.chat_uid == id);
 
-    exactMessagesData.messages = [
-      {
-        messageType: messageType,
-        text: message.text,
-        timeStamp: time,
-        username: name,
-      },
-    ];
-    newChatList.unshift(exactMessagesData);
-  } else {
-    let withoutExactMessagesData = newChatList.filter((d) => d.id != id);
+//     exactMessagesData.messages = [
+//       {
+//         messageType: messageType,
+//         text: message.text,
+//         timeStamp: time,
+//         username: name,
+//       },
+//     ];
+//     newChatList.unshift(exactMessagesData);
+//   } else {
+//     let withoutExactMessagesData = newChatList.filter((d) => d.id != id);
 
-    // exactMessagesData.messages.push({
-    //   messageType: 2,
-    //   text: message.text,
-    //   timeStamp: time,
-    //   username: allDetails.userName,
-    // });
+//     exactMessagesData.messages.push({
+//       messageType: 2,
+//       text: message.text,
+//       timeStamp: time,
+//       username: allDetails.userName,
+//     });
 
-    newChatList = [exactMessagesData, ...withoutExactMessagesData];
-  }
-};
+//     newChatList = [exactMessagesData, ...withoutExactMessagesData];
+//   }
+// };
 let chatboxChating = (data) => {
-  clickFriendId = data.id;
+  clickFriendId = data.chat_uid;
   return `
   <div class="cems__chatbox__header">
     <div class="cems__chat__details">
@@ -415,11 +433,11 @@ let chatboxChating = (data) => {
     </div>
   </div>
   <div class="cems__chat__callicon">
-  <img src="https://img.icons8.com/windows/96/0998f5/outgoing-call.png" onclick=agoraFunction.audioVideoCall('audio')>
+  <img src="https://img.icons8.com/windows/96/0998f5/outgoing-call.png" onclick=agoraFunction.audioVideoCall('')>
   <img src="https://img.icons8.com/material-outlined/96/0998f5/video-call.png"onclick=agoraFunction.audioVideoCall('video')>
   </div>
 </div>
-<div id="cems__chatbox__messages" class="cems__messageFor${data.id}">
+<div id="cems__chatbox__messages" class="cems__messageFor${data.chat_uid}">
   ${
     !data.messages.length
       ? `<p class="cems__no_found">No message found</p>`
@@ -442,7 +460,7 @@ let chatboxChating = (data) => {
   </div>
   <div id="sendMessageBtn" class="cems__chatbox__send--footer" >
   <img src="https://img.icons8.com/material/96/03a9f4/filled-sent.png" onclick=sendMessage('${
-    data.id
+    data.chat_uid
   }')> 
   </div>
   

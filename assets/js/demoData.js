@@ -16,8 +16,9 @@ let allDetails = {
 let newChatList = [];
 let chatListData = [
   {
-    name: "Zarif",
-    id: 'vexpo-234',
+    id:234,
+    name: "abc",
+    chat_uid: 'vexpo-234',
     messages: [
       {
         messageType: 3,
@@ -34,8 +35,9 @@ let chatListData = [
     ],
   },
   {
+    id:235,
     name: "Raj",
-    id: 'vexpo-235',
+    chat_uid: 'vexpo-235',
     messages: [],
   },
 ];
@@ -126,8 +128,8 @@ let fetchData = (uid, allMessage = []) => {
 };
 let addchangeUser = (uid) => {
   if (uid === "vexpo-242") {
-    let withoutData = chatListData.filter((data) => data.id !== uid);
-    let alData = chatListData.find((data) => data.id == "vexpo-243");
+    let withoutData = chatListData.filter((data) => data.chat_uid !== uid);
+    let alData = chatListData.find((data) => data.chat_uid == "vexpo-243");
     chatListData = withoutData;
     if (alData === undefined) {
       chatListData.push({
@@ -137,8 +139,8 @@ let addchangeUser = (uid) => {
       });
     }
   } else {
-    let withoutData = chatListData.filter((data) => data.id != uid);
-    let alData = chatListData.find((data) => data.id == "vexpo-242");
+    let withoutData = chatListData.filter((data) => data.chat_uid != uid);
+    let alData = chatListData.find((data) => data.chat_uid == "vexpo-242");
     chatListData = withoutData;
     if (alData === undefined) {
       chatListData.push({

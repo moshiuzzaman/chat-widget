@@ -106,6 +106,7 @@ class agoraFuntionality {
       })
     }
   peerMessageRecive() {
+
     this.rtmClient.on("MessageFromPeer", function (message, peerId, proper) {
       let withOutUnreadMessageId = unreadMessageId.filter((id) => id != peerId);
       unreadMessageId = [...withOutUnreadMessageId, peerId];
@@ -124,30 +125,29 @@ class agoraFuntionality {
     this.localInvitationEvents();
     this.channelId = this.uid 
     this.localInvitation._channelId = this.uid 
-    this.localInvitation._content = {
-      name: this.userName,
-      type: type,
-    };
+    this.localInvitation._content = type
     this.calltype = type;
     this.localInvitation.send();
+    console.log(this.localInvitation)
     this.sections.getModalSection.innerHTML = outgoinCallOutput(type);
     this.sections.getCallingType = document.getElementById("callingType");
     this.status = "busy";
     this.sections.getModalSection.style.display = "flex";
     sendMessage(calleeId, { text: `You gave ${calleeName} a ${type} call `, type: "call" });
     this.rtcToken = await this.createAgoraRtcToken(1);
-    this.joinReciveCallReciver(type);
+    this.joinReciveCallReciver(this.calltype);
   };
 
   localInvitationEvents = () => {
     // Send call invitation
 
     this.localInvitation.on("LocalInvitationReceivedByPeer", (r) => {
+      console.log('invitation LocalInvitationReceivedByPeer')
       this.sections.getCallingType.innerHTML = `Calling ${calleeName}`;
     });
     this.localInvitation.on("LocalInvitationAccepted", (r) => {
-      this.joinReciveCallSender(this.localInvitation._content.type);
-      recivedCallOutput(this.localInvitation._content.type);
+      this.joinReciveCallSender(this.calltype);
+      recivedCallOutput(this.calltype);
     });
 
     this.localInvitation.on("LocalInvitationCanceled", (r) => {
@@ -170,29 +170,31 @@ class agoraFuntionality {
 
   async RemoteInvitationReceived() {
     this.rtmClient.on("RemoteInvitationReceived", async (remoteInvitation) => {
-      if (this.status != "online") {
-        console.log("user offline");
-        remoteInvitation.refuse();
-        return;
-      }
+      // if (this.status != "online") {
+      //   console.log("user "+this.status);
+      //   remoteInvitation.refuse();
+      //   return;
+      // }
       if (this.remoteInvitation != null) {
         this.remoteInvitation.removeAllListeners();
         this.remoteInvitation = null;
       }
+      console.log(remoteInvitation)
       this.remoteInvitation = remoteInvitation;
       this.channelId = remoteInvitation._channelId;
       this.rtcToken = await this.createAgoraRtcToken(2);
-      incomingCallOutput(remoteInvitation._content.name, remoteInvitation._content.type);
-      this.calltype = remoteInvitation._content.type;
+      this.calltype = remoteInvitation._content.toLowerCase()
+      this.caller=friendList.find(f=>f.chat_uid===remoteInvitation.callerId)
+      incomingCallOutput(this.caller.name, this.calltype);
       this.sections.getCallingType = document.getElementById("callingType");
       this.status = "busy";
       this.sections.getModalSection.style.display = "flex";
       this.peerEvents();
       reciveMessageStoreAndOutput(
-        { text: `${remoteInvitation._content.name} called You`, type: "call" },
+        { text: `${this.caller.name} called You`, type: "call" },
         remoteInvitation.callerId
       );
-      this.joinReciveCallReciver(remoteInvitation._content.type);
+      this.joinReciveCallReciver(this.calltype);
     });
   }
 
@@ -201,11 +203,11 @@ class agoraFuntionality {
       console.log("RemoteInvitationReceived" + r);
     });
     this.remoteInvitation.on("RemoteInvitationAccepted", (r) => {
-      this.joinReciveCallSender(this.remoteInvitation._content.type);
-      recivedCallOutput(this.remoteInvitation._content.type);
+      this.joinReciveCallSender(this.calltype);
+      recivedCallOutput(this.calltype);
     });
     this.remoteInvitation.on("RemoteInvitationCanceled", (r) => {
-      this.hidecall(`${this.remoteInvitation._content.name} canceled the call`);
+      this.hidecall(`${this.this.caller.name} canceled the call`);
     });
     this.remoteInvitation.on("RemoteInvitationRefused", (r) => {
       console.log("RemoteInvitationRefused " + r);
@@ -222,10 +224,10 @@ class agoraFuntionality {
   reciveIncomingCall() {
     this.remoteInvitation.accept();
   }
-  // **********audio video *************
+  // ********** video *************
 
   async joinReciveCallReciver(type) {
-    
+   
     this.rtcClient = AgoraRTC.createClient({ mode: "rtc", codec: "vp8" });
     this.rtcClient.on("user-published", async (user, mediaType) => {
       console.log(user)
@@ -413,6 +415,7 @@ let videoControl=()=>{
   videoshare=!videoshare
 }
 let recivedCallOutput = (type) => {
+  console.log('callType'+type)
   let output = `
   <div id="cems__callsection">
        
@@ -492,7 +495,7 @@ let incomingCallOutput = (name, type) => {
          <div class="cems__callButtons">
          <svg  class="cems__cancleBtn" onclick=cancelIncoingCall() xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="96" height="96" viewBox="0 0 172 172" style=" fill:#000000;"><g transform=""><g fill="none" fill-rule="nonzero" stroke="none" stroke-width="1" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="10" stroke-dasharray="" stroke-dashoffset="0" font-family="none" font-weight="none" font-size="none" text-anchor="none" style="mix-blend-mode: normal"><path d="M0,172v-172h172v172z" fill="none"></path><path d="M86,172c-47.49649,0 -86,-38.50351 -86,-86v0c0,-47.49649 38.50351,-86 86,-86v0c47.49649,0 86,38.50351 86,86v0c0,47.49649 -38.50351,86 -86,86z" fill="#ff0000"></path><g fill="#ffffff"><path d="M121.73829,99.31467c-5.2127,0 -10.33071,-0.81528 -15.18081,-2.41812c-2.37655,-0.81066 -5.29815,-0.06698 -6.74856,1.4227l-9.57317,7.22665c-11.1021,-5.92636 -17.94074,-12.76269 -23.78626,-23.78165l7.01417,-9.32374c1.82225,-1.81994 2.47586,-4.47826 1.69292,-6.97259c-1.60977,-4.8755 -2.42736,-9.9912 -2.42736,-15.20621c0,-3.76691 -3.0648,-6.83171 -6.83171,-6.83171h-15.63579c-3.76691,0 -6.83171,3.0648 -6.83171,6.83171c0,43.17973 35.12856,78.30829 78.30829,78.30829c3.76691,0 6.83171,-3.0648 6.83171,-6.83171v-15.59191c0,-3.76691 -3.0648,-6.83171 -6.83171,-6.83171z"></path></g><path d="" fill="none"></path></g></g></svg>
            ${
-             type === "audio"
+             type === ""
                ? `<svg class="cems__reciveBtn" onclick=reciveIncomingCall() xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="96" height="96" viewBox="0 0 172 172" style=" fill:#000000;"><g transform=""><g fill="none" fill-rule="nonzero" stroke="none" stroke-width="1" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="10" stroke-dasharray="" stroke-dashoffset="0" font-family="none" font-weight="none" font-size="none" text-anchor="none" style="mix-blend-mode: normal"><path d="M0,172v-172h172v172z" fill="none"></path><path d="M86,172c-47.49649,0 -86,-38.50351 -86,-86v0c0,-47.49649 38.50351,-86 86,-86v0c47.49649,0 86,38.50351 86,86v0c0,47.49649 -38.50351,86 -86,86z" fill="#44b43c"></path><g fill="#ffffff"><path d="M121.73829,99.31467c-5.2127,0 -10.33071,-0.81528 -15.18081,-2.41812c-2.37655,-0.81066 -5.29815,-0.06698 -6.74856,1.4227l-9.57317,7.22665c-11.1021,-5.92636 -17.94074,-12.76269 -23.78626,-23.78165l7.01417,-9.32374c1.82225,-1.81994 2.47586,-4.47826 1.69292,-6.97259c-1.60977,-4.8755 -2.42736,-9.9912 -2.42736,-15.20621c0,-3.76691 -3.0648,-6.83171 -6.83171,-6.83171h-15.63579c-3.76691,0 -6.83171,3.0648 -6.83171,6.83171c0,43.17973 35.12856,78.30829 78.30829,78.30829c3.76691,0 6.83171,-3.0648 6.83171,-6.83171v-15.59191c0,-3.76691 -3.0648,-6.83171 -6.83171,-6.83171z"></path></g><path d="" fill="none"></path></g></g></svg>`
                : `<svg class="cems__reciveBtn" onclick=reciveIncomingCall() xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="96" height="96" viewBox="0 0 172 172" style=" fill:#000000;"><g fill="none" fill-rule="nonzero" stroke="none" stroke-width="1" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="10" stroke-dasharray="" stroke-dashoffset="0" font-family="none" font-weight="none" font-size="none" text-anchor="none" style="mix-blend-mode: normal"><path d="M0,172v-172h172v172z" fill="none"></path><path d="M86,172c-47.49649,0 -86,-38.50351 -86,-86v0c0,-47.49649 38.50351,-86 86,-86v0c47.49649,0 86,38.50351 86,86v0c0,47.49649 -38.50351,86 -86,86z" fill="#2aa826"></path><g fill="#ffffff"><path d="M53.93429,61.06c-3.92983,0 -7.12571,3.19588 -7.12571,7.12571v35.62857c0,3.92983 3.19588,7.12571 7.12571,7.12571h46.31714c3.92983,0 7.12571,-3.19588 7.12571,-7.12571v-10.39631l12.02464,9.61693c0.64488,0.51305 1.43227,0.77937 2.22679,0.77937c0.52374,0 1.05316,-0.11974 1.54483,-0.35489c1.23631,-0.59143 2.01802,-1.83983 2.01802,-3.20796v-28.50286c0,-1.36814 -0.78171,-2.61992 -2.01802,-3.21492c-1.23275,-0.58787 -2.70276,-0.42365 -3.77162,0.43144l-12.02464,9.61693v-10.39631c0,-3.92983 -3.19588,-7.12571 -7.12571,-7.12571z"></path></g></g></svg>`
            }
@@ -510,7 +513,7 @@ let reciveMessageStoreAndOutput = (message, peerId) => {
   let peerDetails = friendList.find((d) => d.chat_uid == peerId);
   chatListDataStore(message, peerId, peerDetails.name, "recive",currentDateTime);
 
-  newChatListStore(message, peerId, peerDetails.name, "recive");
+  // newChatListStore(message, peerId, peerDetails.name, "recive");
   createRecivedMessageOutput(message.text, peerId,currentDateTime);
   scrollBottom();
   gotoChatList();
@@ -537,7 +540,7 @@ let getFriendListData = async (authToken, uid) => {
     let response = await axios.get(`https://tradazine.com/api/v1/get-all-users`, {
       headers: { Authorization: `Bearer ${authToken}` },
     });
-    let friendlist = await response.data.data.filter((d) => d.id != uid);
+    let friendlist = await response.data.data.filter((d) => d.chat_uid != uid);
     return await friendlist;
   } catch (err) {
     console.error(err);

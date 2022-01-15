@@ -48,7 +48,6 @@ let chatsToggle = (data) => {
   }
   let timeStamp = "";
   if (lastMessageDetails !== undefined) {
-    console.log(lastMessageDetails);
     if (lastMessageDetails.timeStamp !== null && lastMessageDetails.timeStamp !== undefined) {
       timeStamp = lastMessageDetails.timeStamp.split("|")[1];
     }
@@ -236,9 +235,9 @@ let createMessageOutput = (message, time) => {
   }
 };
 let sendMessage = async (id, message = null) => {
-  console.log(id);
   let currentDateTime = getCurrentDateTime();
   if (selectFile !== undefined) {
+    console.log('inselectFile')
     document.getElementById("sendMessageBtn").disabled = true;
     let formData = new FormData();
     formData.append("file", selectFile);
@@ -320,14 +319,12 @@ let filesend = () => {
   });
 };
 let cancelFileSend = () => {
-  console.log("object");
   selectFile = undefined;
   document.getElementById("cems__inputfileOutput").style.bottom = "-8px";
   document.getElementById("cems_file_upload").value = "";
 };
 
 let chatListDataStore = (message, id, name, type, time) => {
-  console.log(id);
   let messageType;
   if (type == "sent") {
     messageType = 2;
@@ -336,10 +333,7 @@ let chatListDataStore = (message, id, name, type, time) => {
   }
 
   let exactMessagesData = chatListData.find((d) => d.chat_uid == id);
-  console.log(exactMessagesData)
   if (exactMessagesData == undefined) {
-    console.log('in undefine')
-    console.log(id);
     exactMessagesData = friendList.find((data) => data.id == id);
     if (exactMessagesData === undefined) {
       exactMessagesData = friendList.find((data) => data.chat_uid == id);
@@ -377,7 +371,6 @@ let chatListDataStore = (message, id, name, type, time) => {
     });
     chatListData = [exactMessagesData, ...withoutExactMessagesData];
   }
-  console.log(chatListData)
   return exactMessagesData;
 };
 // let newChatListStore = (message, id, name, type, time) => {
@@ -433,8 +426,8 @@ let chatboxChating = (data) => {
     </div>
   </div>
   <div class="cems__chat__callicon">
-  <img src="https://img.icons8.com/windows/96/0998f5/outgoing-call.png" onclick=agoraFunction.audioVideoCall('')>
   <img src="https://img.icons8.com/material-outlined/96/0998f5/video-call.png"onclick=agoraFunction.audioVideoCall('video')>
+  <img src="https://img.icons8.com/windows/96/0998f5/outgoing-call.png" onclick=agoraFunction.audioVideoCall('')>
   </div>
 </div>
 <div id="cems__chatbox__messages" class="cems__messageFor${data.chat_uid}">
@@ -458,11 +451,9 @@ let chatboxChating = (data) => {
   <div id="cems_send_message">
   <input id="cems__input__message" type="text" placeholder="Write a message..." autocomplete="off"/>
   </div>
-  <div id="sendMessageBtn" class="cems__chatbox__send--footer" >
-  <img src="https://img.icons8.com/material/96/03a9f4/filled-sent.png" onclick=sendMessage('${
-    data.chat_uid
-  }')> 
-  </div>
+  <button id="sendMessageBtn" class="cems__chatbox__send--footer" onclick=sendMessage('${data.chat_uid }')>
+  <img src="https://img.icons8.com/material/96/03a9f4/filled-sent.png"> 
+  </button>
   
 </div>
   `;

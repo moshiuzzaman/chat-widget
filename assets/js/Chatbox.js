@@ -21,7 +21,14 @@ class InteractiveChatbox {
     this.showChatbox = !this.showChatbox;
     this.showOrHideChatBox(chatbox, this.args.chatToggleButton);
   }
-
+  chatInitWithUid(chatbox){
+    if (!this.showChatbox) {
+      chatbox.classList.remove("cems__chatbox--active");
+      this.toggleIcon(false, this.args.chatToggleButton);
+    }
+     this.showChatbox = true;
+    this.showOrHideChatBox(chatbox, this.args.chatToggleButton);
+  }
   showOrHideChatBox(chatbox, chatToggleButton) {
     if (this.showChatbox) {
       chatbox.classList.add("cems__chatbox--active");
@@ -65,8 +72,8 @@ const chatList = document.getElementById("cems__chatbox__chatlists");
 const chatSection = document.getElementById("cems__chatbox__chatting");
 
 const icons = {
-  isClicked: '<img src="https://img.icons8.com/material/96/ffffff/expand-arrow--v1.png"/>',
-  isNotClicked: '<img src="https://img.icons8.com/fluency-systems-regular/96/ffffff/chat.png"/>',
+  isClicked: '<img src="https://i.ibb.co/jTmPpLF/caht-BUBBLE-drag.png"/>',
+  isNotClicked: '<img src="https://i.ibb.co/VBHQM48/chat-BUBBLE.png"/>',
 };
 const chatbox = new InteractiveChatbox(chatToggleButton, chatContent, icons, chatSection, chatList);
 chatbox.display();
@@ -94,7 +101,7 @@ let cemsChatInit = async (email, pass, appId) => {
 };
 let chatInitWithUid=(id)=>{
    const chatContent = document.querySelector(".cems__chatbox__support");
-  chatbox.toggleState(chatContent)
-  inMessages=!inMessages
+  chatbox.chatInitWithUid(chatContent)
+  inMessages=true
   showMesseges(id.toString())
 }

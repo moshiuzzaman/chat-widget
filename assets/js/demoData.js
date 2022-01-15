@@ -14,63 +14,12 @@ let allDetails = {
   access_token: "",
 };
 let newChatList = [];
-let chatListData = [
-  {
-    id:234,
-    name: "abc",
-    chat_uid: 'vexpo-234',
-    messages: [
-      {
-        messageType: 3,
-        text: "How are you",
-        timeStamp: null,
-        username: "Zarif",
-      },
-      {
-        messageType: 2,
-        text: "I am fine.",
-        timeStamp: null,
-        username: "shozonraj",
-      },
-    ],
-  },
-  {
-    id:235,
-    name: "Raj",
-    chat_uid: 'vexpo-235',
-    messages: [],
-  },
-];
+let chatListData = [];
 let friendList = [
-  {
-    uid: "difs-234",
-    name: "Zarif",
-  },
-
-  {
-    name: "Raj",
-    uid: "difs-235",
-  },
-  {
-    name: "shozon raj",
-    uid: "difs-238",
-  },
-  {
-    name: "Raj1",
-    uid: "difs-236",
-  },
-  {
-    name: "Raj3",
-    uid: "difs-237",
-  },
-  {
-    name: "shozonraj",
-    uid: "difs-233",
-  },
 ];
 
 window.addEventListener("beforeunload", function (e) {
-  // localStorage.setItem(`CemsChatDataFor${allDetails.userId}`, JSON.stringify(chatListData));
+  localStorage.setItem(`CemsChatDataFor${allDetails.userId}`, JSON.stringify(chatListData));
 });
 
 //   window.onbeforeunload = function(e) {
@@ -124,7 +73,7 @@ let fetchData = (uid, allMessage = []) => {
     }
   }
   // chatListData=testd
-  addchangeUser(uid);
+  // addchangeUser(uid);
 };
 let addchangeUser = (uid) => {
   if (uid === "vexpo-242") {

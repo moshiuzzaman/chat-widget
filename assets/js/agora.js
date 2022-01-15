@@ -39,7 +39,6 @@ class agoraFuntionality {
     await this.rtmClient
       .login({ uid, token: this.rtmToken })
       .then(async () => {
-        console.log(uid, name)
         // let data=await getChatData(access_token,uid)
         this.peerMessageRecive();
         this.RemoteInvitationReceived();
@@ -110,7 +109,6 @@ class agoraFuntionality {
     this.rtmClient.on("MessageFromPeer", function (message, peerId, proper) {
       let withOutUnreadMessageId = unreadMessageId.filter((id) => id != peerId);
       unreadMessageId = [...withOutUnreadMessageId, peerId];
-      console.log(unreadMessageId);
       reciveMessageStoreAndOutput(message, peerId);
     });
   }
@@ -128,7 +126,6 @@ class agoraFuntionality {
     this.localInvitation._content = type
     this.calltype = type;
     this.localInvitation.send();
-    console.log(this.localInvitation)
     this.sections.getModalSection.innerHTML = outgoinCallOutput(type);
     this.sections.getCallingType = document.getElementById("callingType");
     this.status = "busy";
@@ -142,7 +139,6 @@ class agoraFuntionality {
     // Send call invitation
 
     this.localInvitation.on("LocalInvitationReceivedByPeer", (r) => {
-      console.log('invitation LocalInvitationReceivedByPeer')
       this.sections.getCallingType.innerHTML = `Calling ${calleeName}`;
     });
     this.localInvitation.on("LocalInvitationAccepted", (r) => {
@@ -170,16 +166,14 @@ class agoraFuntionality {
 
   async RemoteInvitationReceived() {
     this.rtmClient.on("RemoteInvitationReceived", async (remoteInvitation) => {
-      // if (this.status != "online") {
-      //   console.log("user "+this.status);
-      //   remoteInvitation.refuse();
-      //   return;
-      // }
+      if (this.status != "online") {
+        remoteInvitation.refuse();
+        return;
+      }
       if (this.remoteInvitation != null) {
         this.remoteInvitation.removeAllListeners();
         this.remoteInvitation = null;
       }
-      console.log(remoteInvitation)
       this.remoteInvitation = remoteInvitation;
       this.channelId = remoteInvitation._channelId;
       this.rtcToken = await this.createAgoraRtcToken(2);
@@ -230,7 +224,6 @@ class agoraFuntionality {
    
     this.rtcClient = AgoraRTC.createClient({ mode: "rtc", codec: "vp8" });
     this.rtcClient.on("user-published", async (user, mediaType) => {
-      console.log(user)
       await this.rtcClient.subscribe(user, mediaType);
       console.log("subscribe success");
       if (type == "video") {
@@ -312,7 +305,6 @@ class agoraFuntionality {
         
   }
   async leaveReciveCall() {
-    
     this.localTracks.localVideoTrack && this.localTracks.localVideoTrack.close();
       this.localTracks.screenVideoTrack && this.localTracks.screenVideoTrack.close()
     this.localTracks.localAudioTrack.close();
@@ -415,7 +407,6 @@ let videoControl=()=>{
   videoshare=!videoshare
 }
 let recivedCallOutput = (type) => {
-  console.log('callType'+type)
   let output = `
   <div id="cems__callsection">
        
@@ -509,7 +500,6 @@ let incomingCallOutput = (name, type) => {
 
 let reciveMessageStoreAndOutput = (message, peerId) => {
   let currentDateTime=getCurrentDateTime()
-  console.log(message, peerId)
   let peerDetails = friendList.find((d) => d.chat_uid == peerId);
   chatListDataStore(message, peerId, peerDetails.name, "recive",currentDateTime);
 
@@ -541,6 +531,14 @@ let getFriendListData = async (authToken, uid) => {
       headers: { Authorization: `Bearer ${authToken}` },
     });
     let friendlist = await response.data.data.filter((d) => d.chat_uid != uid);
+    let isTecnicalHelp=friendList.find(f=>f.chat_uid==='tecnicalhelp')
+    if(isTecnicalHelp===undefined){
+      friendlist.push({
+        id:"technicalhelp",
+        chat_uid:"technicalhelp",
+        name:"technicalhelp"
+      })
+    }
     return await friendlist;
   } catch (err) {
     console.error(err);

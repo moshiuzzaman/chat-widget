@@ -535,9 +535,17 @@ div#cems__call__sender {
   z-index: 555555555;
   border-radius: 10px;
   border: 1px solid white;
+  background: gray;
 }
 div#cems__call__reciver div,div#cems__call__sender div{
-  border-radius: 20px;
+  justify-content: center;
+    border-radius: 20px;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    align-items: center;
+    display: flex;
+    color: white;
 }
 div#cems__call__reciver {
   width: 100%;
@@ -545,6 +553,7 @@ div#cems__call__reciver {
   border-radius: 20px !important;
   z-index: 55555555;
   border: 1px solid white;
+  background: gray;
 }
 div#cams__call__timer {
   position: absolute;

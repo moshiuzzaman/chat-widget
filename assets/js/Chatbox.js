@@ -1,4 +1,3 @@
-
 class InteractiveChatbox {
   constructor(chatToggleButton, chatbox, icons, chatSection, chatList) {
     this.args = {
@@ -21,12 +20,12 @@ class InteractiveChatbox {
     this.showChatbox = !this.showChatbox;
     this.showOrHideChatBox(chatbox, this.args.chatToggleButton);
   }
-  chatInitWithUid(chatbox){
+  chatInitWithUid(chatbox) {
     if (!this.showChatbox) {
       chatbox.classList.remove("cems__chatbox--active");
       this.toggleIcon(false, this.args.chatToggleButton);
     }
-     this.showChatbox = true;
+    this.showChatbox = true;
     this.showOrHideChatBox(chatbox, this.args.chatToggleButton);
   }
   showOrHideChatBox(chatbox, chatToggleButton) {
@@ -81,9 +80,7 @@ chatbox.toggleIcon(false, chatToggleButton);
 
 let getAuthToken = async (email, pass) => {
   try {
-    const response = await axios.post(
-      `https://tradazine.com/api/v1/login?username=${email}&password=${pass}`
-    );
+    const response = await axios.post(`https://tradazine.com/api/v1/login?username=${email}&password=${pass}`);
     let res = {
       token: response.data.access_token,
       uid: response.data.chat_uid,
@@ -95,13 +92,13 @@ let getAuthToken = async (email, pass) => {
     console.error(error);
   }
 };
-let cemsChatInit = async (email, pass, appId) => {
+let cemsChatInit = async (email, pass, appId, tokenUrl, appCertificate, rington, callerTune) => {
   let authData = await getAuthToken(email, pass);
-  await agoraFunction.init(authData.uid, authData.name, appId, authData.token);
+  await agoraFunction.init(authData.uid, authData.name, appId, authData.token, rington, callerTune, tokenUrl, appCertificate);
 };
-let chatInitWithUid=(id)=>{
-   const chatContent = document.querySelector(".cems__chatbox__support");
-  chatbox.chatInitWithUid(chatContent)
-  inMessages=true
-  showMesseges(id.toString())
-}
+let chatInitWithUid = (id) => {
+  const chatContent = document.querySelector(".cems__chatbox__support");
+  chatbox.chatInitWithUid(chatContent);
+  inMessages = true;
+  showMesseges(id.toString());
+};

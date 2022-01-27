@@ -49,6 +49,11 @@ class agoraFuntionality {
     this.callerTune.pause();
     this.currentTime = 0;
   }
+  async logout() {
+    this.rtmClient.logout().then(() => {
+      document.getElementById("cems__chatbox__button").classList.add("cems__hide__section");
+    });
+  }
   async login(uid, name, appId, access_token) {
     this.uid = uid;
     this.appId = appId;
@@ -65,10 +70,6 @@ class agoraFuntionality {
         allDetails.userName = name;
         allDetails.userId = uid;
         allDetails.access_token = access_token;
-        document
-          .getElementById("cems__log")
-          .appendChild(document.createElement("div"))
-          .append("login as " + name + "id " + uid);
         document.getElementById("cems__chatbox__button").classList.remove("cems__hide__section");
         fetchData(uid);
         gotoChatList();
@@ -308,8 +309,10 @@ class agoraFuntionality {
   }
   async screenshareOn() {
     this.localTracks.screenVideoTrack = await AgoraRTC.createScreenVideoTrack();
-    await this.rtcClient.unpublish([this.localTracks.localVideoTrack]);
-    this.localTracks.localVideoTrack.close();
+    if (this.localTracks.localVideoTrack) {
+      await this.rtcClient.unpublish([this.localTracks.localVideoTrack]);
+      this.localTracks.localVideoTrack.close();
+    }
     await this.rtcClient.publish([this.localTracks.screenVideoTrack]);
     const mycon = document.getElementById("cems__call__sender");
     this.localTracks.screenVideoTrack.play(mycon);
@@ -536,10 +539,6 @@ let reciveMessageStoreAndOutput = (message, peerId) => {
   gotoChatList();
   var chatEl = document.getElementById("cems__chatbox__messages");
   chatEl.scrollTop = chatEl.scrollHeight;
-  document
-    .getElementById("cems__log")
-    .appendChild(document.createElement("div"))
-    .append("Message from: " + peerId + " Message: " + message.text);
 };
 
 let getChatData = async (authToken, uid) => {

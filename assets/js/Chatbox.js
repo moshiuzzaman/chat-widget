@@ -28,6 +28,11 @@ class InteractiveChatbox {
     this.showChatbox = true;
     this.showOrHideChatBox(chatbox, this.args.chatToggleButton);
   }
+  chatboxoff() {
+    this.showChatbox = false;
+    this.toggleIcon(false, this.args.chatToggleButton);
+    this.args.chatbox.classList.remove("cems__chatbox--active");
+  }
   showOrHideChatBox(chatbox, chatToggleButton) {
     if (this.showChatbox) {
       chatbox.classList.add("cems__chatbox--active");
@@ -92,7 +97,8 @@ let getAuthToken = async (email, pass) => {
     console.error(error);
   }
 };
-let cemsChatInit = async (email, pass, appId, tokenUrl, appCertificate, rington, callerTune) => {
+let bsChatInit = async (email, pass, appId, tokenUrl, appCertificate, rington, callerTune) => {
+  backToChatList();
   let authData = await getAuthToken(email, pass);
   await agoraFunction.init(authData.uid, authData.name, appId, authData.token, rington, callerTune, tokenUrl, appCertificate);
 };
@@ -101,4 +107,8 @@ let chatInitWithUid = (id) => {
   chatbox.chatInitWithUid(chatContent);
   inMessages = true;
   showMesseges(id.toString());
+};
+let logoutFromAgora = () => {
+  chatbox.chatboxoff();
+  agoraFunction.logout();
 };

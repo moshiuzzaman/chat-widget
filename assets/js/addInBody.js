@@ -1,5 +1,4 @@
-
-document.getElementById('cems__root').innerHTML+=`<div class="cems__chatbox">
+document.getElementById("bs__root").innerHTML += `<div class="cems__chatbox">
 <div class="cems__chatbox__support">
   <div id="cems__chatbox__chatlists">
     <div id="cems__chatlist__header">
@@ -60,7 +59,7 @@ document.getElementById('cems__root').innerHTML+=`<div class="cems__chatbox">
   <button>button</button>
 </div>
 </div>
-<div id="cems__root"></div>
+<div id="bs__root"></div>
 <div id="cems__log" hidden></div>
 <!-- <button id="cems__myBtn">Open Modal</button> -->
 <div id="cems__myModal" class="cems__modal">
@@ -80,4 +79,4 @@ document.getElementById('cems__root').innerHTML+=`<div class="cems__chatbox">
     </div>
   </div>
 </div>
-</div>`
+</div>`;

@@ -537,6 +537,9 @@ div#cems__call__sender {
   border: 1px solid white;
   background: gray;
 }
+div#cems__chatbox__button button {
+  background: none;
+}
 div#cems__call__reciver div,div#cems__call__sender div{
   justify-content: center;
     border-radius: 20px;

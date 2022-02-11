@@ -80,3 +80,10 @@ document.getElementById("bs__root").innerHTML += `<div class="cems__chatbox">
   </div>
 </div>
 </div>`;
+// Your CSS as text
+var cssstyles = ``;
+
+var styleSheet = document.createElement("style");
+styleSheet.type = "text/css";
+styleSheet.innerText = cssstyles;
+document.head.appendChild(styleSheet);

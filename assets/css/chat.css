@@ -35,9 +35,21 @@
     right: 26px;
     bottom: 16px;
 }
+div#cems__chatbox__button button {
+    background: #03a9f4;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 80px;
+    height: 80px;
+    border-radius: 500px;
+  }
+img.arrowIcon {
+    padding-top: 6px;
+}
 .cems__chatbox__button img {
     transition: transform .3s;
-    width: 80px;
+    width: 50px;
 }
 /* .cems__chatbox__button:hover img {
     transform: rotate(22deg);

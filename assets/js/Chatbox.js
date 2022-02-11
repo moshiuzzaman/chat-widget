@@ -76,8 +76,9 @@ const chatList = document.getElementById("cems__chatbox__chatlists");
 const chatSection = document.getElementById("cems__chatbox__chatting");
 
 const icons = {
-  isClicked: '<img src="https://i.ibb.co/jTmPpLF/caht-BUBBLE-drag.png"/>',
-  isNotClicked: '<img src="https://i.ibb.co/VBHQM48/chat-BUBBLE.png"/>',
+  isClicked: '<img class="arrowIcon" src="https://img.icons8.com/ios-glyphs/90/ffffff/expand-arrow--v1.png"/>',
+  isNotClicked:
+    '<img class="chatIcon" src="https://img.icons8.com/external-kiranshastry-lineal-kiranshastry/64/ffffff/external-chat-multimedia-kiranshastry-lineal-kiranshastry.png"/>',
 };
 const chatbox = new InteractiveChatbox(chatToggleButton, chatContent, icons, chatSection, chatList);
 chatbox.display();

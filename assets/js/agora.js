@@ -104,6 +104,7 @@ class agoraFuntionality {
   }
   async createAgoraRtcToken(id) {
     this.callid = id;
+    console.log(`${this.tokenUrl}/rtc-uid-token/?uid=${id}&channelName=${this.channelId}&appID=${this.appId}&appCertificate=${this.appCertificate}`);
     try {
       const response = await axios.get(
         `${this.tokenUrl}/rtc-uid-token/?uid=${id}&channelName=${this.channelId}&appID=${this.appId}&appCertificate=${this.appCertificate}`
